@@ -1,4 +1,4 @@
-.PHONY: help install test test-cov lint format clean eval data-check generate-data
+.PHONY: help install test test-cov lint format clean eval data-check generate-data metrics grep-gate
 
 PYTHON ?= python3
 VENV ?= .venv
@@ -12,6 +12,8 @@ help:
 	@echo "  make lint           Run ruff linter"
 	@echo "  make format         Auto-format code with ruff"
 	@echo "  make data-check     Validate DuckDB benchmark datasets and ground truth"
+	@echo "  make metrics        Append metrics_log.csv row (pytest + data-check)"
+	@echo "  make grep-gate      Check prose register (scripts/grep_gate.sh)"
 	@echo "  make clean          Remove temporary files and caches"
 
 generate-data:
@@ -37,6 +39,12 @@ format:
 
 data-check:
 	$(VENV)/bin/python -m src.db.schema --validate
+
+metrics:
+	bash scripts/record_metrics.sh
+
+grep-gate:
+	bash scripts/grep_gate.sh
 
 clean:
 	rm -rf build/ dist/ *.egg-info .pytest_cache/ .coverage htmlcov/ .ruff_cache/

@@ -66,3 +66,11 @@ htmlcov/
 # Logs
 logs/*.log
 *.log
+
+# Session-scoped working files (human-authorship playbook; not shipped)
+HANDOFF.md
+TODO_*.md
+*.draft.md
+05_RATING_AND_MASTER_PLAN.md
+06_HUMAN_AUTHORSHIP_PLAYBOOK.md
+.cursor/plans/

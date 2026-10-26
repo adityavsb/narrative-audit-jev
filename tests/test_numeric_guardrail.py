@@ -7,7 +7,25 @@ import pytest
 
 from src.agents.claim_extractor import ClaimExtractor
 from src.agents.numeric_guardrail import NumericGuardrail
+from src.agents.state import ClaimExtraction
 from src.db.schema import get_default_db
+
+
+def _margin_claim(**kwargs) -> ClaimExtraction:
+    defaults = dict(
+        claim_id="test_gm",
+        ticker="AURA",
+        fiscal_year=2025,
+        fiscal_quarter="Q4",
+        speaker_name="Test Speaker",
+        speaker_title="CEO",
+        statement="Gross margin this quarter reflects product mix.",
+        claim_type="gross_margin",
+        metrics_mentioned=["gross_margin"],
+        sentiment_direction="NEUTRAL",
+    )
+    defaults.update(kwargs)
+    return ClaimExtraction(**defaults)
 
 
 @pytest.fixture
@@ -68,3 +86,72 @@ class TestNumericGuardrail:
         assert fact_check.metric == "gross_margin"
         assert fact_check.audited_value > 0.75
         assert "consistent" in fact_check.explanation.lower()
+
+    def test_contraction_claim_on_diluting_company_is_reconciled(self, populated_db):
+        """CONTRACTION margin claims must still hit the gross-margin path, not fallback."""
+        guardrail = NumericGuardrail()
+        claim = _margin_claim(
+            ticker="AURA",
+            statement="Gross margins contracted by 1,800 basis points on inference COGS.",
+            sentiment_direction="CONTRACTION",
+        )
+        fact_check = guardrail.verify_claim(populated_db, claim)
+        assert fact_check.metric == "gross_margin"
+        assert fact_check.is_verified is True
+        assert fact_check.audited_value is not None
+        assert "compressed" in fact_check.explanation.lower()
+
+    def test_contraction_claim_on_control_company_is_contradicted(self, populated_db):
+        """False dilution claims against Vortex must be flagged, not skipped."""
+        guardrail = NumericGuardrail()
+        claim = _margin_claim(
+            ticker="VORS",
+            statement="Vortex is experiencing severe gross margin dilution and ballooning cloud costs.",
+            sentiment_direction="CONTRACTION",
+        )
+        fact_check = guardrail.verify_claim(populated_db, claim)
+        assert fact_check.metric == "gross_margin"
+        assert fact_check.is_verified is False
+        assert "contradiction" in fact_check.explanation.lower()
+
+    def test_margin_claim_with_infrastructure_does_not_use_capex_path(self, populated_db):
+        """Gross-margin claims must not fall through to capex heuristics when text mentions infrastructure."""
+        guardrail = NumericGuardrail()
+        claim = _margin_claim(
+            ticker="AURA",
+            statement=(
+                "Gross margins contracted while we scaled inference infrastructure for Copilot workloads."
+            ),
+            sentiment_direction="CONTRACTION",
+        )
+        fact_check = guardrail.verify_claim(populated_db, claim)
+        assert fact_check.metric == "gross_margin"
+        assert fact_check.metric != "free_cash_flow_drain"
+
+    def test_organic_arr_magnitude_mismatch(self, populated_db):
+        """Stated ARR figures should reconcile to segment totals when no reclassification row exists."""
+        guardrail = NumericGuardrail()
+        claim = _margin_claim(
+            ticker="VORS",
+            statement="We reached $500 million in AI-driven Annual Recurring Revenue this quarter.",
+            claim_type="ai_arr",
+            metrics_mentioned=["segment_revenue"],
+            sentiment_direction="EXPANSION",
+        )
+        fact_check = guardrail.verify_claim(populated_db, claim)
+        assert fact_check.metric == "organic_arr_magnitude"
+        assert fact_check.is_verified is False
+
+    def test_neutral_margin_claim_is_reconciled_not_skipped(self, populated_db):
+        """NEUTRAL margin claims without 'high'/'stable' must still reconcile to GAAP GM."""
+        guardrail = NumericGuardrail()
+        claim = _margin_claim(
+            ticker="AURA",
+            statement="Gross margin this quarter reflects the mix of Copilot and core workflow SKUs.",
+            sentiment_direction="NEUTRAL",
+        )
+        fact_check = guardrail.verify_claim(populated_db, claim)
+        assert fact_check.metric == "gross_margin"
+        assert fact_check.metric != "general_accounting_reconciliation"
+        assert fact_check.audited_value is not None
+        assert abs(fact_check.audited_value - 0.61) < 0.01

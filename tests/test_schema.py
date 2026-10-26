@@ -1,8 +1,15 @@
 """Unit tests for DuckDB schema, accounting identities, and benchmark data loading."""
 
+import json
 from pathlib import Path
 import pytest
-from src.db.schema import FinancialDatabase, get_default_db
+from src.db.schema import (
+    EXPECTED_GOLDEN_CASES,
+    FinancialDatabase,
+    get_default_db,
+    main,
+    validate_benchmark,
+)
 
 
 @pytest.fixture(scope="module")
@@ -74,4 +81,43 @@ def test_sample_fixture_loading():
     assert stats["segments_count"] == 2
     assert stats["transcripts_count"] == 3
     db.close()
+
+
+def test_validate_benchmark_passes_on_shipped_data():
+    """make data-check / --validate must enforce schema, identities, and 52 golden cases."""
+    errors, stats = validate_benchmark()
+    assert errors == [], errors
+    assert stats["companies_count"] == 4
+    assert stats["quarters_count"] == 32
+    assert stats["golden_cases"] == EXPECTED_GOLDEN_CASES
+
+
+def test_validate_benchmark_fails_when_golden_file_missing(tmp_path):
+    bench_dir = Path(__file__).resolve().parent.parent / "data" / "benchmark"
+    errors, _stats = validate_benchmark(
+        benchmark_dir=bench_dir,
+        golden_path=tmp_path / "missing_golden.json",
+    )
+    assert errors
+    assert any("not found" in err.lower() for err in errors)
+
+
+def test_validate_benchmark_fails_on_corrupt_verified_number(tmp_path):
+    repo = Path(__file__).resolve().parent.parent
+    golden_src = repo / "data" / "golden_ground_truth.json"
+    tampered = tmp_path / "golden_ground_truth.json"
+    cases = json.loads(golden_src.read_text())
+    cases[0]["ground_truth"]["verified_numbers"]["total_revenue_q4_2025"] = 1.0
+    tampered.write_text(json.dumps(cases))
+
+    errors, _stats = validate_benchmark(
+        benchmark_dir=repo / "data" / "benchmark",
+        golden_path=tampered,
+    )
+    assert errors
+    assert any("total_revenue_q4_2025" in err for err in errors)
+
+
+def test_cli_validate_flag_passes():
+    assert main(["--validate"]) == 0
 

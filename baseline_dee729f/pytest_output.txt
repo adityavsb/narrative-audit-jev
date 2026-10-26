@@ -1,0 +1,17 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.6, pytest-9.1.1
+rootdir: /tmp/naj-baseline-dee729f
+
+collected 48 items
+
+tests/test_audit_logger.py ....                                          [  8%]
+tests/test_claim_extractor.py ....                                       [ 16%]
+tests/test_ground_truth.py ....                                          [ 25%]
+tests/test_numeric_guardrail.py ....                                     [ 33%]
+tests/test_privacy_leakage.py ..                                         [ 37%]
+tests/test_schema.py .....                                               [ 47%]
+tests/test_semantic_metrics.py .....                                     [ 58%]
+tests/test_sql_guardrail.py ............                                 [ 83%]
+tests/test_text2sql_agent.py ........                                    [100%]
+
+============================== 48 passed in 1.84s ==============================

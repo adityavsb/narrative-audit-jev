@@ -1,0 +1,16 @@
+{
+  "commit": "dee729f7636cc1c819f5515e6395208656576097",
+  "commit_short": "dee729f",
+  "captured_utc": "2026-10-26",
+  "pytest_passed": 48,
+  "pytest_failed": 0,
+  "pytest_duration_s": 1.84,
+  "schema_validate_flag": false,
+  "schema_module_behaviour": "load_only_counts",
+  "companies_count": 4,
+  "quarters_count": 32,
+  "segments_count": 9,
+  "transcripts_count": 12,
+  "golden_ground_truth_sha256": "6874cf81c1479c20d68ccb4f55f015f44f608b5a87e4a8f8d893c73e07657ada",
+  "golden_case_count": 52
+}

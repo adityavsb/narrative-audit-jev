@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+import argparse
 import json
+import re
+import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 import duckdb
 
 
@@ -237,6 +240,71 @@ class FinancialDatabase:
         self.conn.close()
 
 
+EXPECTED_COMPANIES = 4
+EXPECTED_QUARTERS = 32
+EXPECTED_GOLDEN_CASES = 52
+EXPECTED_TICKERS = {"AURA", "NXUS", "SYNX", "VORS"}
+GOLDEN_REQUIRED_KEYS = {
+    "case_id",
+    "ticker",
+    "fiscal_year",
+    "fiscal_quarter",
+    "category",
+    "claim_text",
+    "ground_truth",
+}
+GOLDEN_REQUIRED_GT_KEYS = {
+    "is_discrepancy",
+    "divergence_category",
+    "materiality",
+    "expected_verdict",
+    "verified_numbers",
+    "rationale",
+}
+GOLDEN_DIVERGENCE_CATEGORIES = {
+    "MARGIN_DILUTION",
+    "CAPITAL_SINKHOLE",
+    "REVENUE_RECLASSIFICATION",
+    "PILOT_CHURN",
+    "NONE",
+}
+GOLDEN_MATERIALITIES = {"NONE", "LOW", "MODERATE", "HIGH", "CRITICAL"}
+GOLDEN_VERDICTS = {"SUPPORTED", "CONTRADICTED", "UNVERIFIABLE"}
+GAAP_COLUMNS = {
+    "total_revenue",
+    "cost_of_goods_sold",
+    "gross_profit",
+    "rd_expense",
+    "sm_expense",
+    "ga_expense",
+    "operating_income",
+    "net_income",
+    "operating_cash_flow",
+    "capital_expenditures",
+    "free_cash_flow",
+    "cash_and_equivalents",
+    "deferred_revenue",
+}
+_PERIOD_METRIC_KEY = re.compile(
+    r"^(?P<metric>[a-z_]+)_q(?P<quarter>[1-4])_(?P<year>\d{4})$",
+    re.IGNORECASE,
+)
+_NUMBER_RECONCILE_TOLERANCE = 0.015
+
+
+def repo_root() -> Path:
+    """Return the repository root (parent of the `src` package)."""
+    return Path(__file__).resolve().parent.parent.parent
+
+
+def default_benchmark_dir() -> Path:
+    return repo_root() / "data" / "benchmark"
+
+
+def default_golden_path() -> Path:
+    return repo_root() / "data" / "golden_ground_truth.json"
+
+
 def get_default_db(benchmark_path: Optional[Path] = None) -> FinancialDatabase:
     """Factory creating an in-memory database populated with benchmark data."""
     db = FinancialDatabase(":memory:")
@@ -245,13 +313,258 @@ def get_default_db(benchmark_path: Optional[Path] = None) -> FinancialDatabase:
     return db
 
 
-if __name__ == "__main__":
-    import sys
-    bench_dir = Path(__file__).resolve().parent.parent.parent / "data" / "benchmark"
+def _gross_margin(row: Dict[str, Any]) -> Optional[float]:
+    rev = float(row.get("total_revenue") or 0.0)
+    cogs = float(row.get("cost_of_goods_sold") or 0.0)
+    if rev <= 0:
+        return None
+    return (rev - cogs) / rev
+
+
+def _lookup_financial_row(
+    db: FinancialDatabase, ticker: str, year: int, quarter: str
+) -> Optional[Dict[str, Any]]:
+    df = db.query_df(
+        """
+        SELECT * FROM quarterly_financials
+        WHERE ticker = ? AND fiscal_year = ? AND fiscal_quarter = ?
+        """,
+        [ticker, year, quarter],
+    )
+    if df.empty:
+        return None
+    return df.iloc[0].to_dict()
+
+
+def _metric_from_row(row: Dict[str, Any], metric: str) -> Optional[float]:
+    if metric == "gross_margin":
+        return _gross_margin(row)
+    if metric in GAAP_COLUMNS:
+        value = row.get(metric)
+        return None if value is None else float(value)
+    return None
+
+
+def validate_accounting_identities(db: FinancialDatabase) -> List[str]:
+    """Confirm GAAP identities hold for every loaded quarterly row."""
+    errors: List[str] = []
+    df = db.query_df("SELECT * FROM quarterly_financials")
+    if df.empty:
+        return ["No quarterly_financials rows loaded."]
+
+    gp_mismatch = (df["total_revenue"] - df["cost_of_goods_sold"]) - df["gross_profit"]
+    bad_gp = df[gp_mismatch.abs() >= 1e-4]
+    for _, row in bad_gp.iterrows():
+        errors.append(
+            f"Gross profit identity failed for {row['id']}: "
+            f"{row['total_revenue']} - {row['cost_of_goods_sold']} != {row['gross_profit']}"
+        )
+
+    fcf_mismatch = (df["operating_cash_flow"] - df["capital_expenditures"]) - df["free_cash_flow"]
+    bad_fcf = df[fcf_mismatch.abs() >= 1e-4]
+    for _, row in bad_fcf.iterrows():
+        errors.append(
+            f"Free cash flow identity failed for {row['id']}: "
+            f"{row['operating_cash_flow']} - {row['capital_expenditures']} != {row['free_cash_flow']}"
+        )
+    return errors
+
+
+def _parse_verified_metric_key(key: str) -> Optional[Tuple[str, Optional[int], Optional[str]]]:
+    """Map a verified_numbers key to (metric, year, quarter)."""
+    match = _PERIOD_METRIC_KEY.match(key)
+    if match:
+        metric = match.group("metric").lower()
+        quarter = f"Q{match.group('quarter')}"
+        year = int(match.group("year"))
+        if metric == "gross_margin" or metric in GAAP_COLUMNS:
+            return metric, year, quarter
+        return None
+    lowered = key.lower()
+    if lowered == "gross_margin" or lowered in GAAP_COLUMNS:
+        return lowered, None, None
+    return None
+
+
+def validate_golden_cases(db: FinancialDatabase, golden_path: Path) -> List[str]:
+    """Validate golden-case count, schema, ticker coverage, and GAAP number keys."""
+    errors: List[str] = []
+    if not golden_path.exists():
+        return [f"Golden ground-truth file not found: {golden_path}"]
+
+    with open(golden_path, "r") as f:
+        cases = json.load(f)
+
+    if not isinstance(cases, list):
+        return [f"Golden ground-truth must be a JSON list, got {type(cases).__name__}."]
+
+    if len(cases) != EXPECTED_GOLDEN_CASES:
+        errors.append(
+            f"Expected {EXPECTED_GOLDEN_CASES} golden test cases, found {len(cases)}."
+        )
+
+    case_ids = [c.get("case_id") for c in cases if isinstance(c, dict)]
+    if len(case_ids) != len(set(case_ids)):
+        errors.append("Duplicate case_id found in golden benchmark.")
+
+    tickers_seen = set()
+    for case in cases:
+        case_id = case.get("case_id", "<missing>")
+        missing = GOLDEN_REQUIRED_KEYS - set(case.keys())
+        if missing:
+            errors.append(f"{case_id}: missing top-level keys {sorted(missing)}")
+            continue
+
+        tickers_seen.add(case["ticker"])
+        gt = case["ground_truth"]
+        if not isinstance(gt, dict):
+            errors.append(f"{case_id}: ground_truth must be an object")
+            continue
+
+        missing_gt = GOLDEN_REQUIRED_GT_KEYS - set(gt.keys())
+        if missing_gt:
+            errors.append(f"{case_id}: missing ground_truth keys {sorted(missing_gt)}")
+            continue
+
+        if gt["divergence_category"] not in GOLDEN_DIVERGENCE_CATEGORIES:
+            errors.append(
+                f"{case_id}: invalid divergence_category {gt['divergence_category']!r}"
+            )
+        if gt["materiality"] not in GOLDEN_MATERIALITIES:
+            errors.append(f"{case_id}: invalid materiality {gt['materiality']!r}")
+        if gt["expected_verdict"] not in GOLDEN_VERDICTS:
+            errors.append(f"{case_id}: invalid expected_verdict {gt['expected_verdict']!r}")
+
+        ticker = case["ticker"]
+        year = int(case["fiscal_year"])
+        quarter = str(case["fiscal_quarter"])
+        period_row = _lookup_financial_row(db, ticker, year, quarter)
+        if period_row is None:
+            errors.append(
+                f"{case_id}: no quarterly_financials row for {ticker} {year} {quarter}"
+            )
+            continue
+
+        verified = gt.get("verified_numbers") or {}
+        if not isinstance(verified, dict):
+            errors.append(f"{case_id}: verified_numbers must be an object")
+            continue
+
+        for key, claimed in verified.items():
+            parsed = _parse_verified_metric_key(str(key))
+            if parsed is None:
+                continue
+            metric, metric_year, metric_quarter = parsed
+            lookup_year = year if metric_year is None else metric_year
+            lookup_quarter = quarter if metric_quarter is None else metric_quarter
+            row = (
+                period_row
+                if (lookup_year, lookup_quarter) == (year, quarter)
+                else _lookup_financial_row(db, ticker, lookup_year, lookup_quarter)
+            )
+            if row is None:
+                errors.append(
+                    f"{case_id}: no quarterly_financials row for verified key "
+                    f"{key} ({ticker} {lookup_year} {lookup_quarter})"
+                )
+                continue
+            audited = _metric_from_row(row, metric)
+            if audited is None:
+                errors.append(f"{case_id}: cannot compute {metric} for key {key}")
+                continue
+            try:
+                claimed_num = float(claimed)
+            except (TypeError, ValueError):
+                errors.append(f"{case_id}: verified_numbers[{key!r}] is not numeric")
+                continue
+            if abs(audited - claimed_num) > _NUMBER_RECONCILE_TOLERANCE:
+                errors.append(
+                    f"{case_id}: verified_numbers[{key}]={claimed_num} does not match "
+                    f"audited {metric}={audited:.4f} for {ticker} {lookup_year} {lookup_quarter}"
+                )
+
+    missing_tickers = EXPECTED_TICKERS - tickers_seen
+    if missing_tickers:
+        errors.append(f"Golden cases missing tickers: {sorted(missing_tickers)}")
+    return errors
+
+
+def validate_benchmark(
+    benchmark_dir: Optional[Path] = None,
+    golden_path: Optional[Path] = None,
+) -> Tuple[List[str], Dict[str, Any]]:
+    """Load benchmark data and validate schema, identities, and golden cases."""
+    bench = Path(benchmark_dir) if benchmark_dir else default_benchmark_dir()
+    golden = Path(golden_path) if golden_path else default_golden_path()
+    errors: List[str] = []
+
+    if not bench.exists():
+        return [f"Benchmark directory not found: {bench}"], {}
+
+    db = get_default_db(bench)
+    try:
+        stats = db.get_summary_stats()
+        if stats["companies_count"] != EXPECTED_COMPANIES:
+            errors.append(
+                f"Expected {EXPECTED_COMPANIES} companies, found {stats['companies_count']}."
+            )
+        if stats["quarters_count"] != EXPECTED_QUARTERS:
+            errors.append(
+                f"Expected {EXPECTED_QUARTERS} quarterly rows, found {stats['quarters_count']}."
+            )
+
+        tickers = {
+            row[0] for row in db.execute("SELECT ticker FROM companies").fetchall()
+        }
+        missing_cos = EXPECTED_TICKERS - tickers
+        if missing_cos:
+            errors.append(f"Benchmark missing companies: {sorted(missing_cos)}")
+
+        errors.extend(validate_accounting_identities(db))
+        errors.extend(validate_golden_cases(db, golden))
+        if golden.exists():
+            with open(golden, "r") as f:
+                loaded = json.load(f)
+            if isinstance(loaded, list):
+                stats["golden_cases"] = len(loaded)
+        return errors, stats
+    finally:
+        db.close()
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="DuckDB schema loader and benchmark validator for narrative-audit-jev."
+    )
+    parser.add_argument(
+        "--validate",
+        action="store_true",
+        help="Validate DuckDB schema, accounting identities, and 52 golden test cases.",
+    )
+    args = parser.parse_args(argv)
+
+    if args.validate:
+        errors, stats = validate_benchmark()
+        print("DuckDB Schema & Ingestion Status:")
+        for k, v in stats.items():
+            print(f"  {k}: {v}")
+        if errors:
+            print(f"Validation: FAIL ({len(errors)} error(s))")
+            for err in errors:
+                print(f"  - {err}")
+            return 1
+        print(f"Validation: PASS ({stats.get('golden_cases', 0)} golden test cases)")
+        return 0
+
+    bench_dir = default_benchmark_dir()
     db = get_default_db(bench_dir)
     stats = db.get_summary_stats()
     print("DuckDB Schema & Ingestion Status:")
     for k, v in stats.items():
         print(f"  {k}: {v}")
     db.close()
-    sys.exit(0)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

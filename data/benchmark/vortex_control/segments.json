@@ -1,0 +1,24 @@
+[
+  {
+    "id": "VORS_SEG_2025_Q4_CORE",
+    "ticker": "VORS",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "segment_name": "Infrastructure Telemetry & Logs",
+    "segment_revenue": 85.0,
+    "segment_gross_margin": 0.79,
+    "is_reported_organic": true,
+    "notes": "Core observability platform"
+  },
+  {
+    "id": "VORS_SEG_2025_Q4_AI",
+    "ticker": "VORS",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "segment_name": "Automated Anomaly Detection (AI Engine)",
+    "segment_revenue": 20.0,
+    "segment_gross_margin": 0.77,
+    "is_reported_organic": true,
+    "notes": "High-margin proprietary lightweight anomaly detector running on-premise and edge"
+  }
+]

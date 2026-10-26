@@ -1,0 +1,35 @@
+[
+  {
+    "id": "AURA_TX_2025_Q4_PREP",
+    "ticker": "AURA",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "section": "PREPARED_REMARKS",
+    "speaker_name": "Elena Rostova",
+    "speaker_title": "Chief Executive Officer",
+    "content": "We had an outstanding fourth quarter, with total revenue expanding to $160 million. Over 70% of our enterprise customer tier has enabled our AI Copilot suite. We are demonstrating rapid adoption and operating leverage, validating our position as the mission-critical AI platform for enterprise workflows.",
+    "sequence_order": 1
+  },
+  {
+    "id": "AURA_TX_2025_Q4_QA",
+    "ticker": "AURA",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "section": "ANALYST_QA",
+    "speaker_name": "Marcus Vance",
+    "speaker_title": "Managing Director, Equity Research",
+    "content": "Elena, congratulations on the top-line growth. However, looking at the cost structure, gross margins contracted from 79% in Q1 2024 to 61% in Q4 2025, an 1,800 basis point drop. How much of this is structural cloud inference costs versus temporary scaling friction?",
+    "sequence_order": 2
+  },
+  {
+    "id": "AURA_TX_2025_Q4_CFO",
+    "ticker": "AURA",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "section": "ANALYST_QA",
+    "speaker_name": "David Chen",
+    "speaker_title": "Chief Financial Officer",
+    "content": "Thanks Marcus. What we are seeing is unprecedented user engagement. When customers run millions of Copilot sessions, we capture long-term platform stickiness. We believe the customer lifetime value and enterprise expansion opportunities will dwarf any near-term gross margin fluctuations as model costs naturally decline over time.",
+    "sequence_order": 3
+  }
+]

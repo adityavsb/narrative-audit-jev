@@ -1,0 +1,35 @@
+[
+  {
+    "id": "SYNX_SEG_2025_Q4_LEGACY",
+    "ticker": "SYNX",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "segment_name": "Core Enterprise SQL",
+    "segment_revenue": 70.0,
+    "segment_gross_margin": 0.8,
+    "is_reported_organic": true,
+    "notes": "Legacy transactional database subscriptions"
+  },
+  {
+    "id": "SYNX_SEG_2025_Q4_RECLASS",
+    "ticker": "SYNX",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "segment_name": "Synthetix AI Platform Edition",
+    "segment_revenue": 65.0,
+    "segment_gross_margin": 0.77,
+    "is_reported_organic": false,
+    "notes": "Existing SQL database contracts retroactively reclassified into AI Platform tier upon renewal with bundled vector index"
+  },
+  {
+    "id": "SYNX_SEG_2025_Q4_ORGANIC",
+    "ticker": "SYNX",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "segment_name": "Net-New AI Vector Store",
+    "segment_revenue": 15.0,
+    "segment_gross_margin": 0.75,
+    "is_reported_organic": true,
+    "notes": "Genuine net-new customer expansion for AI features"
+  }
+]

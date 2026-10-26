@@ -1,0 +1,35 @@
+[
+  {
+    "id": "VORS_TX_2025_Q4_PREP",
+    "ticker": "VORS",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "section": "PREPARED_REMARKS",
+    "speaker_name": "Simon Gallagher",
+    "speaker_title": "President & Chief Executive Officer",
+    "content": "Our Q4 performance reflects steady, disciplined execution. Full-year revenue crossed $396 million, growing 17% YoY, while maintaining industry-leading gross margins of 79.1%. Our proprietary AI anomaly detection modules run locally on client clusters, allowing us to expand analytical value without absorbing third-party GPU cloud costs.",
+    "sequence_order": 1
+  },
+  {
+    "id": "VORS_TX_2025_Q4_QA",
+    "ticker": "VORS",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "section": "ANALYST_QA",
+    "speaker_name": "Emily Watson",
+    "speaker_title": "Executive Director, Equity Research",
+    "content": "Simon, we've seen competitors in the observability space experience gross margin pressure from LLM inference bills. How has Vortex managed to keep gross margin stable above 79% while rolling out generative telemetry summaries?",
+    "sequence_order": 2
+  },
+  {
+    "id": "VORS_TX_2025_Q4_CFO",
+    "ticker": "VORS",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "section": "ANALYST_QA",
+    "speaker_name": "Rachel Adams",
+    "speaker_title": "Chief Financial Officer",
+    "content": "Emily, from day one our engineering thesis was edge-first distillation. We avoid unconstrained external LLM API calls on high-frequency log streams. Our customers get instant root-cause analysis, and our unit economics remain highly profitable. We generated $24.2 million in Free Cash Flow this quarter.",
+    "sequence_order": 3
+  }
+]

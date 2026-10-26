@@ -1,0 +1,24 @@
+[
+  {
+    "id": "NXUS_SEG_2025_Q4_STORAGE",
+    "ticker": "NXUS",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "segment_name": "Core Enterprise Data Platform",
+    "segment_revenue": 195.0,
+    "segment_gross_margin": 0.7,
+    "is_reported_organic": true,
+    "notes": "Legacy enterprise database clusters"
+  },
+  {
+    "id": "NXUS_SEG_2025_Q4_GPU",
+    "ticker": "NXUS",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "segment_name": "AI Dedicated Cluster Compute",
+    "segment_revenue": 15.0,
+    "segment_gross_margin": 0.4,
+    "is_reported_organic": true,
+    "notes": "Newly deployed GPU infrastructure running at low utilization"
+  }
+]

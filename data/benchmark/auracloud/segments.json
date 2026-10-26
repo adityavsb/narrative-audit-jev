@@ -1,0 +1,24 @@
+[
+  {
+    "id": "AURA_SEG_2025_Q4_CORE",
+    "ticker": "AURA",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "segment_name": "Core Workflow Platform",
+    "segment_revenue": 115.0,
+    "segment_gross_margin": 0.74,
+    "is_reported_organic": true,
+    "notes": "Legacy workflow subscription"
+  },
+  {
+    "id": "AURA_SEG_2025_Q4_AI",
+    "ticker": "AURA",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "segment_name": "AI Copilot & Services",
+    "segment_revenue": 45.0,
+    "segment_gross_margin": 0.28,
+    "is_reported_organic": true,
+    "notes": "Generative AI add-on carrying high third-party GPU and token inference costs"
+  }
+]

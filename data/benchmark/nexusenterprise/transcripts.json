@@ -1,0 +1,35 @@
+[
+  {
+    "id": "NXUS_TX_2025_Q4_PREP",
+    "ticker": "NXUS",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "section": "PREPARED_REMARKS",
+    "speaker_name": "Arthur Sterling",
+    "speaker_title": "Chairman & Chief Executive Officer",
+    "content": "We are making generational capital investments in next-generation GPU clusters and high-density liquid-cooled compute facilities to capture what we forecast as a $500 billion enterprise AI total addressable market. Demand for foundational compute has never been stronger.",
+    "sequence_order": 1
+  },
+  {
+    "id": "NXUS_TX_2025_Q4_QA",
+    "ticker": "NXUS",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "section": "ANALYST_QA",
+    "speaker_name": "Sarah Jenkins",
+    "speaker_title": "Lead Software Analyst, Equity Research",
+    "content": "Arthur, your Capex expanded by 220% YoY to $96 million this quarter, while full-year Free Cash Flow turned deeply negative at negative $144 million. However, incremental revenue growth was only $5 million YoY (+2.4%). When do you realistically anticipate ROIC inflecting to cover this cash burn?",
+    "sequence_order": 2
+  },
+  {
+    "id": "NXUS_TX_2025_Q4_CFO",
+    "ticker": "NXUS",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "section": "ANALYST_QA",
+    "speaker_name": "Brian Cole",
+    "speaker_title": "Chief Financial Officer",
+    "content": "Sarah, this is long-cycle infrastructure. Customer pilot commitments take 18 to 24 months to migrate production data workloads. We are completely comfortable utilizing our balance sheet liquidity because securing compute capacity ahead of the curve is our primary competitive moat.",
+    "sequence_order": 3
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": "SYNX_TX_2025_Q4_PREP",
+    "ticker": "SYNX",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "section": "PREPARED_REMARKS",
+    "speaker_name": "Rajiv Mehta",
+    "speaker_title": "Chief Executive Officer",
+    "content": "I am thrilled to announce we crossed a major corporate milestone, reaching $80 million in AI-driven Annual Recurring Revenue this quarter. Our AI Platform Edition is rapidly replacing legacy relational databases across Fortune 500 accounts as the default database for generative applications.",
+    "sequence_order": 1
+  },
+  {
+    "id": "SYNX_TX_2025_Q4_QA",
+    "ticker": "SYNX",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "section": "ANALYST_QA",
+    "speaker_name": "Jason Klein",
+    "speaker_title": "Senior Research Analyst, Equity Research",
+    "content": "Rajiv, on the $80 million AI ARR figure: footnote 4 in the segment disclosure notes that $65 million of that revenue reflects existing core database renewals migrated into the new SKU with vector features included. Can you disclose what your organic, net-new AI ARR expansion rate was this quarter excluding renewals?",
+    "sequence_order": 2
+  },
+  {
+    "id": "SYNX_TX_2025_Q4_CFO",
+    "ticker": "SYNX",
+    "fiscal_year": 2025,
+    "fiscal_quarter": "Q4",
+    "section": "ANALYST_QA",
+    "speaker_name": "Amanda White",
+    "speaker_title": "Chief Financial Officer",
+    "content": "Jason, our customers do not separate their data architecture into AI vs non-AI anymore. When an enterprise renews their database with Synthetix, they are running hybrid vector-relational workloads. We manage the platform holistically, and our consolidated net revenue retention remains very healthy at 112%.",
+    "sequence_order": 3
+  }
+]

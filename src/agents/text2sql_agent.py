@@ -1,8 +1,4 @@
-"""Multi-step Text2SQL Tool-Calling Agent with AST Guardrail and Self-Correction.
-
-Transforms natural language financial queries into audited DuckDB SQL, enforces
-read-only AST execution via sqlglot, and self-corrects on syntax or schema errors.
-"""
+"""Text2SQL helper with read-only AST guard and optional LLM client hook."""
 
 from __future__ import annotations
 
@@ -42,8 +38,6 @@ Table `quarterly_financials`:
   - free_cash_flow DOUBLE (operating_cash_flow - capital_expenditures)
   - cash_and_equivalents DOUBLE
   - deferred_revenue DOUBLE
-  - total_assets DOUBLE
-  - total_liabilities DOUBLE
 
 Table `segment_disclosures`:
   - ticker VARCHAR REFERENCES companies(ticker)
@@ -59,7 +53,7 @@ Table `transcripts`:
   - ticker VARCHAR REFERENCES companies(ticker)
   - fiscal_year INTEGER NOT NULL
   - fiscal_quarter VARCHAR NOT NULL
-  - section VARCHAR ('Prepared Remarks' or 'Q&A')
+  - section VARCHAR ('PREPARED_REMARKS' or 'ANALYST_QA')
   - speaker_name VARCHAR
   - speaker_title VARCHAR
   - content VARCHAR
@@ -68,7 +62,7 @@ Table `transcripts`:
 
 
 class Text2SQLAgent:
-    """Enterprise Text2SQL Agent with AST-enforced safety and self-correction."""
+    """Runs SQL through ReadOnlySQLGuardrail; supports heuristic or LLM-generated queries."""
 
     def __init__(
         self,

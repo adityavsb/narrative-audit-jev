@@ -8,7 +8,7 @@ import pandas as pd
 
 
 class SemanticMetricsLayer:
-    """Computes standardized, audited financial metrics over DuckDB financial tables."""
+    """Computes standardized financial metrics over DuckDB benchmark financial tables."""
 
     def __init__(self, conn: duckdb.DuckDBPyConnection):
         self.conn = conn

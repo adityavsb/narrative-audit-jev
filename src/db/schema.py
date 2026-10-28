@@ -82,9 +82,15 @@ class FinancialDatabase:
     """Manages an embedded or persistent DuckDB analytical instance."""
 
     def __init__(self, db_path: Optional[str] = ":memory:"):
-        """Initialize connection to DuckDB."""
+        """Initialize connection to DuckDB with external access disabled for security."""
         self.db_path = db_path
-        self.conn = duckdb.connect(database=db_path)
+        # Disable file reading, socket access, and extensions at the connection level
+        config = {
+            "enable_external_access": "false",
+        }
+        self.conn = duckdb.connect(database=db_path, config=config)
+        # Lock configuration to prevent re-enabling via SQL PRAGMA / SET commands
+        self.conn.execute("SET lock_configuration=true;")
         self._init_schema()
 
     def _init_schema(self) -> None:

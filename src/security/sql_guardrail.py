@@ -1,11 +1,11 @@
 """AST-Enforced Read-Only SQL Guardrail powered by sqlglot.
-Guarantees zero database mutations, blocks multi-statement SQL injections,
-and disallows unauthorized file system access or system functions.
+Restricts execution to read-only queries and blocks multi-statement SQL injections
+against registered benchmark tables.
 """
 
 from __future__ import annotations
 
-from typing import List, Set, Type
+from typing import List, Optional, Set, Type
 import sqlglot
 from sqlglot import exp
 
@@ -15,8 +15,16 @@ class SecurityViolationError(Exception):
     pass
 
 
+ALLOWED_TABLES: Set[str] = {
+    "companies",
+    "quarterly_financials",
+    "segment_disclosures",
+    "transcripts",
+}
+
+
 class ReadOnlySQLGuardrail:
-    """Enforces strict read-only execution by analyzing Abstract Syntax Trees (ASTs)."""
+    """Enforces strict read-only execution by analyzing Abstract Syntax Trees (ASTs) against an allowlist."""
 
     # Prohibited SQL statement AST types (mutations and administrative DDL/DML)
     PROHIBITED_EXP_TYPES: Set[Type[exp.Expression]] = {
@@ -36,31 +44,15 @@ class ReadOnlySQLGuardrail:
         exp.Merge,
         exp.TruncateTable,
         exp.Copy,
+        exp.CurrentVersion,
     }
 
-    # Prohibited functions in DuckDB that could allow arbitrary filesystem access or external calls
-    PROHIBITED_FUNCTIONS: Set[str] = {
-        "read_csv",
-        "read_csv_auto",
-        "read_parquet",
-        "read_json",
-        "read_json_auto",
-        "write_csv",
-        "copy",
-        "install",
-        "load",
-        "system",
-        "getenv",
-    }
-
-    def __init__(self, dialect: str = "duckdb"):
+    def __init__(self, dialect: str = "duckdb", allowed_tables: Optional[Set[str]] = None):
         self.dialect = dialect
+        self.allowed_tables = {t.lower() for t in (allowed_tables or ALLOWED_TABLES)}
 
     def validate_and_sanitize(self, sql_query: str) -> str:
-        """Parse, validate, and return sanitized read-only SQL query.
-
-        Raises SecurityViolationError if the query violates any security policy.
-        """
+        """Parse, validate against allowlist, and return sanitized read-only SQL query."""
         if not sql_query or not sql_query.strip():
             raise SecurityViolationError("Empty SQL query provided.")
 
@@ -89,33 +81,39 @@ class ReadOnlySQLGuardrail:
                 f"Only read-only SELECT or UNION queries permitted. Root statement is: {type(root).__name__}"
             )
 
-        # 4. AST Traversal: Check every child node for prohibited expression types
-        prohibited_clean_names = {f.replace("_", "") for f in self.PROHIBITED_FUNCTIONS}
-
-        for node in root.walk():
-            # Check for prohibited expression classes
-            for prohibited_type in self.PROHIBITED_EXP_TYPES:
-                if isinstance(node, prohibited_type):
-                    raise SecurityViolationError(
-                        f"Prohibited SQL expression detected: {prohibited_type.__name__}"
-                    )
-
-            # Check node class name (e.g. ReadCSV, ReadParquet)
-            class_name = type(node).__name__.lower()
-            if class_name in prohibited_clean_names:
+        # 4. Check for prohibited statement expression types
+        for prohibited_type in self.PROHIBITED_EXP_TYPES:
+            if root.find(prohibited_type):
                 raise SecurityViolationError(
-                    f"Unauthorized filesystem or system function access prohibited: '{class_name}'"
+                    f"Prohibited SQL expression detected: {prohibited_type.__name__}"
                 )
 
-            # Check for dangerous system functions
-            if isinstance(node, (exp.Anonymous, exp.Func)):
-                func_name = getattr(node, "name", "").lower() or type(node).__name__.lower()
-                if func_name in self.PROHIBITED_FUNCTIONS or func_name.replace("_", "") in prohibited_clean_names:
-                    raise SecurityViolationError(
-                        f"Unauthorized filesystem or system function access prohibited: '{func_name}'"
-                    )
+        # 5. Collect CTE names defined in query
+        cte_names = {c.alias_or_name.lower() for c in root.find_all(exp.CTE)}
 
-        # 5. Return standardized sanitized SQL string
+        # 6. Strict Table allowlist verification
+        for table in root.find_all(exp.Table):
+            if not isinstance(table.this, exp.Identifier):
+                raise SecurityViolationError(
+                    "Table functions, file paths, and subquery literals are prohibited in FROM."
+                )
+            if table.args.get("db") or table.args.get("catalog"):
+                raise SecurityViolationError("Schema-qualified table names are prohibited.")
+            t_name = table.name.lower()
+            if t_name not in self.allowed_tables and t_name not in cte_names:
+                raise SecurityViolationError(
+                    f"Unauthorized table access: '{t_name}'. Allowed: {sorted(self.allowed_tables)}"
+                )
+
+        # 7. Block anonymous or unapproved functions
+        for node in root.walk():
+            if isinstance(node, exp.Anonymous):
+                fn_name = node.name.lower()
+                raise SecurityViolationError(
+                    f"Prohibited or unregistered function call: '{fn_name}'"
+                )
+
+        # 8. Return standardized sanitized SQL string
         return root.sql(dialect=self.dialect)
 
     def is_safe(self, sql_query: str) -> bool:
@@ -125,3 +123,4 @@ class ReadOnlySQLGuardrail:
             return True
         except SecurityViolationError:
             return False
+

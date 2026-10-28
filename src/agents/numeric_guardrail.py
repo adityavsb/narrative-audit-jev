@@ -1,7 +1,7 @@
 """Deterministic Numeric Critic / Fact-Checking Gate.
 
 Cross-references claimed figures and operational narratives directly against
-underlying audited accounting entries in DuckDB, flagging contradictions and
+underlying synthetic financial statement entries in DuckDB, flagging contradictions and
 unsupported qualitative assertions.
 """
 
@@ -64,7 +64,7 @@ def _margin_claim_polarity(claim: ClaimExtraction, statement_lower: str) -> str:
 
 
 class NumericGuardrail:
-    """Enforces mathematical reconciliation between executive assertions and GAAP ledger facts."""
+    """Reconciles executive assertions against structured benchmark ledger entries."""
 
     def __init__(self, tolerance: float = 0.02):
         self.tolerance = tolerance  # 2% default tolerance

@@ -30,11 +30,6 @@ dependencies = [
     "sqlglot>=25.0.0",
     "numpy>=1.26.0",
     "pandas>=2.2.0",
-    "scipy>=1.12.0",
-    "scikit-learn>=1.4.0",
-    "pyyaml>=6.0.1",
-    "rich>=13.7.0",
-    "requests>=2.31.0",
 ]
 
 [project.optional-dependencies]

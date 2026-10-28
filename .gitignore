@@ -67,10 +67,14 @@ htmlcov/
 logs/*.log
 *.log
 
-# Session-scoped working files (human-authorship playbook; not shipped)
+# Session-scoped working files (four-pillar review & human-authorship playbook; not shipped)
 HANDOFF.md
 TODO_*.md
 *.draft.md
-05_RATING_AND_MASTER_PLAN.md
-06_HUMAN_AUTHORSHIP_PLAYBOOK.md
+0[0-6]_*.md
 .cursor/plans/
+
+# Local project parking / session tracking (update when resuming work)
+state.md
+decision log.md
+next steps.md

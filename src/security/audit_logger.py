@@ -26,7 +26,7 @@ class AuditLogger:
         details: Dict[str, Any],
         execution_time_ms: float = 0.0,
     ) -> Dict[str, Any]:
-        """Record an immutable audit event."""
+        """Record an append-only audit event entry."""
         entry = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "event_type": event_type,

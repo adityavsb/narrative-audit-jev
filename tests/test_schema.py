@@ -2,6 +2,7 @@
 
 import json
 from pathlib import Path
+import duckdb
 import pytest
 from src.db.schema import (
     EXPECTED_GOLDEN_CASES,
@@ -120,4 +121,15 @@ def test_validate_benchmark_fails_on_corrupt_verified_number(tmp_path):
 
 def test_cli_validate_flag_passes():
     assert main(["--validate"]) == 0
+
+
+def test_duckdb_connection_is_hardened(db: FinancialDatabase):
+    """Verify DuckDB connection has external access disabled and configuration locked."""
+    with pytest.raises(duckdb.Error) as exc_info:
+        db.conn.execute("SELECT content FROM read_text('README.md')")
+    assert "PermissionException" in str(exc_info.value) or "disabled" in str(exc_info.value).lower()
+
+    with pytest.raises(duckdb.Error) as exc_info_lock:
+        db.conn.execute("SET enable_external_access=true")
+    assert "lock" in str(exc_info_lock.value).lower()
 

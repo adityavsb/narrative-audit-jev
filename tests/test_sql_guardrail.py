@@ -101,3 +101,32 @@ class TestReadOnlySQLGuardrail:
         with pytest.raises(SecurityViolationError, match="SQL Syntax parsing failed"):
             guardrail.validate_and_sanitize(query)
         assert guardrail.is_safe(query) is False
+
+    def test_block_table_allowlist_violations(self, guardrail: ReadOnlySQLGuardrail):
+        unauthorized_queries = [
+            "SELECT * FROM secrets",
+            "SELECT * FROM information_schema.tables",
+            "SELECT * FROM main.companies",
+            "SELECT * FROM 'data/benchmark/company.json'",
+            "SELECT * FROM '/etc/passwd'",
+        ]
+        for q in unauthorized_queries:
+            assert guardrail.is_safe(q) is False, f"Expected {q} to be blocked by allowlist"
+            with pytest.raises(SecurityViolationError):
+                guardrail.validate_and_sanitize(q)
+
+    def test_block_dangerous_file_and_system_functions(self, guardrail: ReadOnlySQLGuardrail):
+        dangerous_calls = [
+            "SELECT content FROM read_text('README.md')",
+            "SELECT size FROM read_blob('README.md')",
+            "SELECT * FROM sniff_csv('README.md')",
+            "SELECT * FROM glob('/Users/*')",
+            "SELECT name FROM duckdb_settings()",
+            "SELECT count(*) FROM range(1000000)",
+            "SELECT version()",
+        ]
+        for q in dangerous_calls:
+            assert guardrail.is_safe(q) is False, f"Expected {q} to be blocked by guardrail"
+            with pytest.raises(SecurityViolationError):
+                guardrail.validate_and_sanitize(q)
+

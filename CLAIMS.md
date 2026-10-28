@@ -16,10 +16,14 @@ Numbers in README and public docs must appear here with a traceable source. `[un
 | Nexus FY2025 FCF total −$144M | golden | `data/golden_ground_truth.json` `NXUS_002` `total_fy2025_fcf`: -144 | agent | 2026-10-26 |
 | Synthetix claimed AI ARR $80M; $65M reclassified (81.25%) | scenario | `data/golden_ground_truth.json` `SYNX_001` verified_numbers | agent | 2026-10-26 |
 | Vortex control gross margin Q4 2025 ≈ 79.14% | tests | `tests/test_numeric_guardrail.py::test_verify_vortex_clean_control` audited_value > 0.75 | agent | 2026-10-26 |
-| pytest suite size (current: 87 tests) | CI / Makefile | `.venv/bin/pytest tests` (87 passed) | agent | 2026-10-28 |
-| Golden evaluation verdict accuracy (100.00%) | Makefile, eval_results | `scripts/run_golden_eval.py` / `data/eval_results.json` (52/52 cases) | agent | 2026-10-28 |
-| Brier score calibration metric (0.0076) | Makefile, eval_results | `src/eval/calibration.py` / `data/eval_results.json` (Brier 1950) | agent | 2026-10-28 |
-| Expected Calibration Error (0.0850) | Makefile, eval_results | `src/eval/calibration.py` / `data/eval_results.json` (Guo et al. 2017) | agent | 2026-10-28 |
+| pytest suite size (current: 90 tests) | CI / Makefile | `.venv/bin/pytest tests` (90 passed) | agent | 2026-10-28 |
+| Local baseline verdict accuracy (76.92%) | eval_results | `scripts/run_golden_eval.py` / `data/eval_results.json` (40/52 cases) | agent | 2026-10-28 |
+| Local baseline Brier score (0.1756) | eval_results | `src/eval/calibration.py` / `data/eval_results.json` (Brier 1950) | agent | 2026-10-28 |
+| Local baseline Expected Calibration Error (0.0248) | eval_results | `src/eval/calibration.py` / `data/eval_results.json` (Guo et al. 2017) | agent | 2026-10-28 |
+| Local baseline Maximum Calibration Error (0.2500) | eval_results | `src/eval/calibration.py` / `data/eval_results.json` (MCE worst-bin) | agent | 2026-10-28 |
+| Local baseline Binary Log Loss (0.5336) | eval_results | `src/eval/calibration.py` / `data/eval_results.json` (NLL cross-entropy) | agent | 2026-10-28 |
+| Local baseline SAB 99 Materiality Penalty (0.2547) | eval_results | `src/eval/calibration.py` / `data/eval_results.json` (SEC materiality-weighted) | agent | 2026-10-28 |
+| Local baseline Adversarial Resistance (100.00%) | eval_results | `scripts/run_golden_eval.py` / `data/eval_results.json` (4/4 corporate directive injections) | agent | 2026-10-28 |
 | Public markdown overclaiming grep hits (0) | CI / Makefile | `make grep-gate` / `scripts/grep_gate.sh` (0 hits) | agent | 2026-10-28 |
 | AST validation ~1.2 ms per query | docs/decisions.md ADR-01 | `[unverified]` — no benchmark script in repo | — | 2026-10-26 |
 | LLM inference 500–2000 ms | removed from README | `[unverified]` — not measured here | — | 2026-10-26 |

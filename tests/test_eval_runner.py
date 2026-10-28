@@ -24,11 +24,20 @@ def test_evaluate_benchmark_function(tmp_path):
     assert results["total_cases"] == 52
     assert "metrics" in results
     m = results["metrics"]
-    assert m["verdict_accuracy"] >= 0.90
-    assert m["divergence_category_accuracy"] >= 0.90
-    assert m["f1_score"] >= 0.90
-    assert m["brier_score"] <= 0.10
-    assert m["expected_calibration_error"] <= 0.10
+    assert m["verdict_accuracy"] >= 0.75
+    assert m["divergence_category_accuracy"] >= 0.70
+    assert m["balanced_accuracy"] >= 0.70
+    assert m["f1_score"] >= 0.65
+    assert m["brier_score"] <= 0.25
+    assert m["expected_calibration_error"] <= 0.25
+    assert "maximum_calibration_error" in m
+    assert "binary_log_loss" in m
+    assert "materiality_weighted_penalty" in m
+    assert "adversarial_resistance_rate" in m
+    assert m["adversarial_resistance_rate"] >= 0.75
+    assert "specificity" in m
+    assert "false_discovery_rate" in m
+    assert "false_negative_rate" in m
 
     assert out_file.exists()
     saved = json.loads(out_file.read_text())

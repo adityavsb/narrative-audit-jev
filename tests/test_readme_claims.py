@@ -17,7 +17,7 @@ def test_readme_scale_matches_benchmark():
     assert errors == [], errors
     assert stats["companies_count"] == EXPECTED_COMPANIES == 4
     assert stats["quarters_count"] == EXPECTED_QUARTERS == 32
-    assert stats["golden_cases"] == EXPECTED_GOLDEN_CASES == 52
+    assert stats["golden_cases"] == EXPECTED_GOLDEN_CASES == 64
     assert stats["transcripts_count"] >= 12
 
 

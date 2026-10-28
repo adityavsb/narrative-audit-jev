@@ -85,7 +85,7 @@ def test_sample_fixture_loading():
 
 
 def test_validate_benchmark_passes_on_shipped_data():
-    """make data-check / --validate must enforce schema, identities, and 52 golden cases."""
+    """make data-check / --validate must enforce schema, identities, and 64 golden cases."""
     errors, stats = validate_benchmark()
     assert errors == [], errors
     assert stats["companies_count"] == 4

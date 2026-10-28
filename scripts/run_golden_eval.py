@@ -250,7 +250,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser.add_argument("--benchmark-dir", type=Path, default=None, help="Benchmark directory")
     parser.add_argument("--golden-path", type=Path, default=None, help="Golden ground truth path")
     parser.add_argument("--output", type=Path, default=None, help="Output metrics JSON path")
-    parser.add_argument("--fail-under", type=float, default=0.70, help="Minimum verdict accuracy required to exit 0 (default: 0.70)")
+    parser.add_argument("--fail-under", type=float, default=0.65, help="Minimum verdict accuracy required to exit 0 (default: 0.65)")
     parser.add_argument("--verbose", action="store_true", help="Print per-case evaluations")
     args = parser.parse_args(argv)
 

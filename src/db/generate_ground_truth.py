@@ -278,11 +278,79 @@ def generate_golden_benchmark():
                 },
                 "rationale": "Net income collapsed by 75% YoY from $12M to $3M due to higher COGS and operating expenses."
             }
+        },
+        {
+            "case_id": "AURA_015",
+            "ticker": "AURA",
+            "fiscal_year": 2025,
+            "fiscal_quarter": "Q3",
+            "category": "ANALYST_QA_DEFLECTION",
+            "claim_text": "In the Q3 Q&A session, management directly clarified the margin impact of third-party model inference pricing by providing per-token hosting cost projections.",
+            "relevant_metrics": ["transcripts"],
+            "ground_truth": {
+                "is_discrepancy": True,
+                "divergence_category": "MARGIN_DILUTION",
+                "materiality": "MODERATE",
+                "expected_verdict": "CONTRADICTED",
+                "verified_numbers": {},
+                "rationale": "CFO evaded the analyst inquiry on third-party GPU inference token costs, speaking vaguely about long-term customer stickiness."
+            }
+        },
+        {
+            "case_id": "AURA_016",
+            "ticker": "AURA",
+            "fiscal_year": 2025,
+            "fiscal_quarter": "Q4",
+            "category": "ANALYST_QA_DEFLECTION",
+            "claim_text": "When questioned about customer churn on the AI Copilot add-on, executive leadership provided specific seat renewal cohorts and contract downgrade rates.",
+            "relevant_metrics": ["transcripts"],
+            "ground_truth": {
+                "is_discrepancy": True,
+                "divergence_category": "MARGIN_DILUTION",
+                "materiality": "HIGH",
+                "expected_verdict": "CONTRADICTED",
+                "verified_numbers": {},
+                "rationale": "CEO deflected question regarding AI Copilot churn by citing aggregate top-line logo additions rather than cohort downgrade data."
+            }
+        },
+        {
+            "case_id": "AURA_017",
+            "ticker": "AURA",
+            "fiscal_year": 2025,
+            "fiscal_quarter": "Q4",
+            "category": "SEGMENT_ANALYSIS",
+            "claim_text": "AuraCloud AI Copilot & Services segment achieved an exceptional 65% gross margin in Q4 2025.",
+            "relevant_metrics": ["segment_gross_margin"],
+            "ground_truth": {
+                "is_discrepancy": True,
+                "divergence_category": "MARGIN_DILUTION",
+                "materiality": "HIGH",
+                "expected_verdict": "CONTRADICTED",
+                "verified_numbers": {"ai_segment_gross_margin": 0.28},
+                "rationale": "AI Copilot segment gross margin was only 28%, contradicting the claimed 65%."
+            }
+        },
+        {
+            "case_id": "AURA_018",
+            "ticker": "AURA",
+            "fiscal_year": 2025,
+            "fiscal_quarter": "Q4",
+            "category": "SEGMENT_ANALYSIS",
+            "claim_text": "Footnote 2 in the segment financial statements discloses that third-party cloud inference capacity contracts are classified as long-term operating commitments with zero impact on cost of goods sold.",
+            "relevant_metrics": ["segment_gross_margin"],
+            "ground_truth": {
+                "is_discrepancy": True,
+                "divergence_category": "MARGIN_DILUTION",
+                "materiality": "HIGH",
+                "expected_verdict": "CONTRADICTED",
+                "verified_numbers": {"ai_segment_gross_margin": 0.28},
+                "rationale": "Footnote 2 reveals that variable third-party inference hosting costs directly flow into cost of goods sold, driving segment gross margin down to 28%."
+            }
         }
     ])
 
     # -------------------------------------------------------------------------
-    # 2. NexusEnterprise Corp (NXUS) - Capital Sinkhole & FCF Deterioration (13 cases)
+    # 2. NexusEnterprise Corp (NXUS) - Capital Sinkhole & FCF Deterioration (16 cases)
     # -------------------------------------------------------------------------
     cases.extend([
         {
@@ -537,11 +605,62 @@ def generate_golden_benchmark():
                 },
                 "rationale": "Operating income fell from $32.0M to $20.0M, an exact 37.5% drop."
             }
+        },
+        {
+            "case_id": "NXUS_014",
+            "ticker": "NXUS",
+            "fiscal_year": 2025,
+            "fiscal_quarter": "Q3",
+            "category": "ANALYST_QA_DEFLECTION",
+            "claim_text": "CFO Brian Cole provided explicit cluster utilization percentages and committed customer contracts during the Q3 analyst session.",
+            "relevant_metrics": ["transcripts"],
+            "ground_truth": {
+                "is_discrepancy": True,
+                "divergence_category": "CAPITAL_SINKHOLE",
+                "materiality": "HIGH",
+                "expected_verdict": "CONTRADICTED",
+                "verified_numbers": {},
+                "rationale": "CFO evaded providing concrete GPU cluster utilization figures, citing strategic customer pipeline buildout."
+            }
+        },
+        {
+            "case_id": "NXUS_015",
+            "ticker": "NXUS",
+            "fiscal_year": 2025,
+            "fiscal_quarter": "Q4",
+            "category": "ANALYST_QA_DEFLECTION",
+            "claim_text": "During the Q4 analyst exchange, management asserted that heavy infrastructure investments in GPU clusters are delivering positive cash returns and accelerating free cash flow.",
+            "relevant_metrics": ["free_cash_flow", "capital_expenditures"],
+            "ground_truth": {
+                "is_discrepancy": True,
+                "divergence_category": "CAPITAL_SINKHOLE",
+                "materiality": "CRITICAL",
+                "expected_verdict": "CONTRADICTED",
+                "verified_numbers": {"free_cash_flow": -51.0, "capital_expenditures": 96.0},
+                "rationale": "Free cash flow collapsed to negative $51.0M while Capex surged to $96.0M, directly contradicting the self-funding claim."
+            }
+        },
+        {
+            "case_id": "NXUS_016",
+            "ticker": "NXUS",
+            "fiscal_year": 2025,
+            "fiscal_quarter": "Q4",
+            "category": "SEGMENT_ANALYSIS",
+            "claim_text": "Footnote 3 in our segment reporting demonstrates that AI Dedicated Cluster Compute has achieved positive standalone operating margins.",
+            "relevant_metrics": ["segment_revenue"],
+            "ground_truth": {
+                "is_discrepancy": True,
+                "divergence_category": "CAPITAL_SINKHOLE",
+                "materiality": "HIGH",
+                "expected_verdict": "CONTRADICTED",
+                "verified_numbers": {"ai_cluster_revenue": 15.0},
+                "rationale": "AI cluster compute generated only $15M revenue against overwhelming facility depreciation, generating severe operating losses."
+            }
         }
     ])
 
     # -------------------------------------------------------------------------
-    # 3. Synthetix Data Systems (SYNX) - Revenue Reclassification (13 cases)
+    # 3. Synthetix Data Systems (SYNX) - Revenue Reclassification (16 cases)
     # -------------------------------------------------------------------------
     cases.extend([
         {
@@ -780,11 +899,62 @@ def generate_golden_benchmark():
                 "verified_numbers": {"reclassified_ratio": 0.8125},
                 "rationale": "Footnotes explicitly declare that AI Platform Edition revenue stems from existing renewals."
             }
+        },
+        {
+            "case_id": "SYNX_014",
+            "ticker": "SYNX",
+            "fiscal_year": 2025,
+            "fiscal_quarter": "Q4",
+            "category": "ANALYST_QA_DEFLECTION",
+            "claim_text": "During Q&A, executive leadership clearly distinguished between legacy relational renewals and greenfield vector database revenue.",
+            "relevant_metrics": ["transcripts"],
+            "ground_truth": {
+                "is_discrepancy": True,
+                "divergence_category": "REVENUE_RECLASSIFICATION",
+                "materiality": "HIGH",
+                "expected_verdict": "CONTRADICTED",
+                "verified_numbers": {},
+                "rationale": "CFO grouped all contracts together and refused to provide standalone growth for net-new vector workloads."
+            }
+        },
+        {
+            "case_id": "SYNX_015",
+            "ticker": "SYNX",
+            "fiscal_year": 2025,
+            "fiscal_quarter": "Q4",
+            "category": "SEGMENT_ANALYSIS",
+            "claim_text": "Segment Footnote 4 verifies that migration of legacy relational enterprise contracts into newer product tiers maintained strict organic classification guidelines.",
+            "relevant_metrics": ["reclassified_revenue"],
+            "ground_truth": {
+                "is_discrepancy": True,
+                "divergence_category": "REVENUE_RECLASSIFICATION",
+                "materiality": "CRITICAL",
+                "expected_verdict": "CONTRADICTED",
+                "verified_numbers": {"reclassified_revenue": 65.0},
+                "rationale": "Footnote 4 explicitly discloses that $65M of the $80M ARR is reclassified legacy transactional SQL database subscriptions."
+            }
+        },
+        {
+            "case_id": "SYNX_016",
+            "ticker": "SYNX",
+            "fiscal_year": 2025,
+            "fiscal_quarter": "Q4",
+            "category": "SEGMENT_ANALYSIS",
+            "claim_text": "Segment reporting indicates that core enterprise SQL database revenue expanded steadily without any SKU cannibalization.",
+            "relevant_metrics": ["core_platform_revenue"],
+            "ground_truth": {
+                "is_discrepancy": True,
+                "divergence_category": "REVENUE_RECLASSIFICATION",
+                "materiality": "HIGH",
+                "expected_verdict": "CONTRADICTED",
+                "verified_numbers": {"core_platform_revenue": 70.0},
+                "rationale": "Core SQL revenue dropped as accounts were reclassified into the AI bundle."
+            }
         }
     ])
 
     # -------------------------------------------------------------------------
-    # 4. Vortex Analytics (VORS) - Control Group (Zero Divergence Baseline) (12 cases)
+    # 4. Vortex Analytics (VORS) - Control Group (Zero Divergence Baseline) (14 cases)
     # -------------------------------------------------------------------------
     cases.extend([
         {
@@ -1005,6 +1175,40 @@ def generate_golden_benchmark():
                 "expected_verdict": "CONTRADICTED",
                 "verified_numbers": {"actual_gm_change_bps": 14.0},
                 "rationale": "Gross margin actually expanded slightly by 14 basis points, so claiming a 500 bps drop is false."
+            }
+        },
+        {
+            "case_id": "VORS_013",
+            "ticker": "VORS",
+            "fiscal_year": 2025,
+            "fiscal_quarter": "Q4",
+            "category": "ANALYST_QA_DEFLECTION",
+            "claim_text": "In the Q4 earnings call, CFO Rachel Adams transparently answered analyst inquiries regarding inference costs, confirming that edge distillation kept gross margins stable at 79.1% with $24.2M in Free Cash Flow.",
+            "relevant_metrics": ["gross_margin", "free_cash_flow"],
+            "ground_truth": {
+                "is_discrepancy": False,
+                "divergence_category": "NONE",
+                "materiality": "NONE",
+                "expected_verdict": "SUPPORTED",
+                "verified_numbers": {"gross_margin": 0.7914, "free_cash_flow": 24.2},
+                "rationale": "CFO provided direct, factually verifiable answers on edge architecture economics matching audited financials."
+            }
+        },
+        {
+            "case_id": "VORS_014",
+            "ticker": "VORS",
+            "fiscal_year": 2025,
+            "fiscal_quarter": "Q4",
+            "category": "SEGMENT_ANALYSIS",
+            "claim_text": "Core Infrastructure Telemetry remained Vortex's largest business unit in Q4, generating $85 million with high gross margins of 79%.",
+            "relevant_metrics": ["core_platform_revenue", "core_segment_gross_margin"],
+            "ground_truth": {
+                "is_discrepancy": False,
+                "divergence_category": "NONE",
+                "materiality": "NONE",
+                "expected_verdict": "SUPPORTED",
+                "verified_numbers": {"core_platform_revenue": 85.0, "core_segment_gross_margin": 0.79},
+                "rationale": "Matches audited segment reporting: Infrastructure Telemetry generated $85M at 79% gross margin."
             }
         }
     ])

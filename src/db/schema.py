@@ -248,7 +248,7 @@ class FinancialDatabase:
 
 EXPECTED_COMPANIES = 4
 EXPECTED_QUARTERS = 32
-EXPECTED_GOLDEN_CASES = 52
+EXPECTED_GOLDEN_CASES = 64
 EXPECTED_TICKERS = {"AURA", "NXUS", "SYNX", "VORS"}
 GOLDEN_REQUIRED_KEYS = {
     "case_id",
@@ -490,7 +490,7 @@ def _resolve_verified_number(
                     return float(r["segment_gross_margin"])
         if k == "core_platform_revenue":
             for r in seg_rows:
-                if "Core" in r["segment_name"] or "Platform" in r["segment_name"]:
+                if "Core" in r["segment_name"] or "Platform" in r["segment_name"] or "Telemetry" in r["segment_name"]:
                     return float(r["segment_revenue"])
         if k == "ai_cluster_revenue":
             for r in seg_rows:

@@ -1,45 +1,45 @@
 {
-  "timestamp": "2026-10-28T21:39:10.861689+00:00",
-  "total_cases": 52,
+  "timestamp": "2026-10-28T21:54:57.038348+00:00",
+  "total_cases": 64,
   "metrics": {
-    "verdict_accuracy": 0.7692,
-    "divergence_category_accuracy": 0.7692,
-    "precision": 0.8571,
-    "recall": 0.5455,
-    "specificity": 0.9333,
-    "balanced_accuracy": 0.7394,
-    "f1_score": 0.6667,
-    "false_discovery_rate": 0.1429,
-    "false_negative_rate": 0.4545,
-    "brier_score": 0.1756,
-    "expected_calibration_error": 0.0248,
+    "verdict_accuracy": 0.6875,
+    "divergence_category_accuracy": 0.6875,
+    "precision": 0.875,
+    "recall": 0.4375,
+    "specificity": 0.9375,
+    "balanced_accuracy": 0.6875,
+    "f1_score": 0.5833,
+    "false_discovery_rate": 0.125,
+    "false_negative_rate": 0.5625,
+    "brier_score": 0.2186,
+    "expected_calibration_error": 0.1103,
     "maximum_calibration_error": 0.25,
-    "binary_log_loss": 0.5336,
-    "materiality_weighted_penalty": 0.2547,
+    "binary_log_loss": 0.6293,
+    "materiality_weighted_penalty": 0.3688,
     "adversarial_resistance_rate": 1.0
   },
   "confusion_matrix": {
-    "tp": 12,
+    "tp": 14,
     "fp": 2,
-    "tn": 28,
-    "fn": 10
+    "tn": 30,
+    "fn": 18
   },
   "by_company": {
     "AURA": {
-      "total": 14,
-      "accuracy": 0.7143
+      "total": 18,
+      "accuracy": 0.6111
     },
     "NXUS": {
-      "total": 13,
-      "accuracy": 0.6923
+      "total": 16,
+      "accuracy": 0.625
     },
     "SYNX": {
-      "total": 13,
-      "accuracy": 0.7692
+      "total": 16,
+      "accuracy": 0.625
     },
     "VORS": {
-      "total": 12,
-      "accuracy": 0.9167
+      "total": 14,
+      "accuracy": 0.9286
     }
   },
   "by_category": {
@@ -48,8 +48,8 @@
       "accuracy": 1.0
     },
     "ANALYST_QA_DEFLECTION": {
-      "total": 3,
-      "accuracy": 0.0
+      "total": 9,
+      "accuracy": 0.2222
     },
     "BOUNDARY_EDGE_CASE": {
       "total": 4,
@@ -68,8 +68,8 @@
       "accuracy": 1.0
     },
     "SEGMENT_ANALYSIS": {
-      "total": 3,
-      "accuracy": 0.0
+      "total": 9,
+      "accuracy": 0.2222
     },
     "TREND_SYNTHESIS": {
       "total": 12,
@@ -232,6 +232,50 @@
       "is_correct": false
     },
     {
+      "case_id": "AURA_015",
+      "ticker": "AURA",
+      "category": "ANALYST_QA_DEFLECTION",
+      "expected_verdict": "CONTRADICTED",
+      "predicted_verdict": "SUPPORTED",
+      "expected_divergence": "MARGIN_DILUTION",
+      "predicted_divergence": "NONE",
+      "confidence": 0.8,
+      "is_correct": false
+    },
+    {
+      "case_id": "AURA_016",
+      "ticker": "AURA",
+      "category": "ANALYST_QA_DEFLECTION",
+      "expected_verdict": "CONTRADICTED",
+      "predicted_verdict": "SUPPORTED",
+      "expected_divergence": "MARGIN_DILUTION",
+      "predicted_divergence": "NONE",
+      "confidence": 0.8,
+      "is_correct": false
+    },
+    {
+      "case_id": "AURA_017",
+      "ticker": "AURA",
+      "category": "SEGMENT_ANALYSIS",
+      "expected_verdict": "CONTRADICTED",
+      "predicted_verdict": "CONTRADICTED",
+      "expected_divergence": "MARGIN_DILUTION",
+      "predicted_divergence": "MARGIN_DILUTION",
+      "confidence": 0.85,
+      "is_correct": true
+    },
+    {
+      "case_id": "AURA_018",
+      "ticker": "AURA",
+      "category": "SEGMENT_ANALYSIS",
+      "expected_verdict": "CONTRADICTED",
+      "predicted_verdict": "SUPPORTED",
+      "expected_divergence": "MARGIN_DILUTION",
+      "predicted_divergence": "NONE",
+      "confidence": 0.75,
+      "is_correct": false
+    },
+    {
       "case_id": "NXUS_001",
       "ticker": "NXUS",
       "category": "DISCREPANCY_CLASSIFICATION",
@@ -373,6 +417,39 @@
       "predicted_divergence": "NONE",
       "confidence": 0.75,
       "is_correct": true
+    },
+    {
+      "case_id": "NXUS_014",
+      "ticker": "NXUS",
+      "category": "ANALYST_QA_DEFLECTION",
+      "expected_verdict": "CONTRADICTED",
+      "predicted_verdict": "SUPPORTED",
+      "expected_divergence": "CAPITAL_SINKHOLE",
+      "predicted_divergence": "NONE",
+      "confidence": 0.75,
+      "is_correct": false
+    },
+    {
+      "case_id": "NXUS_015",
+      "ticker": "NXUS",
+      "category": "ANALYST_QA_DEFLECTION",
+      "expected_verdict": "CONTRADICTED",
+      "predicted_verdict": "CONTRADICTED",
+      "expected_divergence": "CAPITAL_SINKHOLE",
+      "predicted_divergence": "CAPITAL_SINKHOLE",
+      "confidence": 0.85,
+      "is_correct": true
+    },
+    {
+      "case_id": "NXUS_016",
+      "ticker": "NXUS",
+      "category": "SEGMENT_ANALYSIS",
+      "expected_verdict": "CONTRADICTED",
+      "predicted_verdict": "SUPPORTED",
+      "expected_divergence": "CAPITAL_SINKHOLE",
+      "predicted_divergence": "NONE",
+      "confidence": 0.8,
+      "is_correct": false
     },
     {
       "case_id": "SYNX_001",
@@ -518,6 +595,39 @@
       "is_correct": true
     },
     {
+      "case_id": "SYNX_014",
+      "ticker": "SYNX",
+      "category": "ANALYST_QA_DEFLECTION",
+      "expected_verdict": "CONTRADICTED",
+      "predicted_verdict": "SUPPORTED",
+      "expected_divergence": "REVENUE_RECLASSIFICATION",
+      "predicted_divergence": "NONE",
+      "confidence": 0.75,
+      "is_correct": false
+    },
+    {
+      "case_id": "SYNX_015",
+      "ticker": "SYNX",
+      "category": "SEGMENT_ANALYSIS",
+      "expected_verdict": "CONTRADICTED",
+      "predicted_verdict": "SUPPORTED",
+      "expected_divergence": "REVENUE_RECLASSIFICATION",
+      "predicted_divergence": "NONE",
+      "confidence": 0.75,
+      "is_correct": false
+    },
+    {
+      "case_id": "SYNX_016",
+      "ticker": "SYNX",
+      "category": "SEGMENT_ANALYSIS",
+      "expected_verdict": "CONTRADICTED",
+      "predicted_verdict": "SUPPORTED",
+      "expected_divergence": "REVENUE_RECLASSIFICATION",
+      "predicted_divergence": "NONE",
+      "confidence": 0.75,
+      "is_correct": false
+    },
+    {
       "case_id": "VORS_001",
       "ticker": "VORS",
       "category": "CONTROL_NON_DISCREPANCY",
@@ -647,6 +757,28 @@
       "expected_divergence": "MARGIN_DILUTION",
       "predicted_divergence": "MARGIN_DILUTION",
       "confidence": 0.85,
+      "is_correct": true
+    },
+    {
+      "case_id": "VORS_013",
+      "ticker": "VORS",
+      "category": "ANALYST_QA_DEFLECTION",
+      "expected_verdict": "SUPPORTED",
+      "predicted_verdict": "SUPPORTED",
+      "expected_divergence": "NONE",
+      "predicted_divergence": "NONE",
+      "confidence": 0.8,
+      "is_correct": true
+    },
+    {
+      "case_id": "VORS_014",
+      "ticker": "VORS",
+      "category": "SEGMENT_ANALYSIS",
+      "expected_verdict": "SUPPORTED",
+      "predicted_verdict": "SUPPORTED",
+      "expected_divergence": "NONE",
+      "predicted_divergence": "NONE",
+      "confidence": 0.8,
       "is_correct": true
     }
   ]

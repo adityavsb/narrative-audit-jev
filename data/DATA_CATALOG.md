@@ -17,6 +17,10 @@ workflows that compare qualitative disclosure text against structured financial 
 All company names, tickers, speaker names, and financial figures are **original fiction**. They do not
 represent real issuers, real people, or real bank affiliations.
 
+**Ticker Disambiguation Note:**
+The synthetic tickers `AURA` and `SYNX` were chosen arbitrarily. They have no association with
+Aura Biosciences, Inc. (NASDAQ: AURA), Silynxcom Ltd. (NYSE American: SYNX), or the Synthetix (SNX) protocol.
+
 Regenerate fixtures locally:
 
 ```bash

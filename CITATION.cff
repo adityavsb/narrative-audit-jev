@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this benchmark harness in your research, please cite it as below."
+authors:
+  - family-names: "Bhadoria"
+    given-names: "Aditya"
+    email: "adityavsb@gmail.com"
+title: "narrative-audit-jev: Synthetic Earnings-vs-Ledger Multi-Agent Consistency Benchmark"
+version: 0.1.0
+date-released: 2026-10-26
+url: "https://github.com/adityavsb/narrative-audit-jev"
+license: MIT
+keywords:
+  - financial-nlp
+  - text2sql
+  - duckdb
+  - audit-analytics
+  - calibration

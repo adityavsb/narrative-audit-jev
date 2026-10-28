@@ -1,6 +1,6 @@
 # narrative-audit-jev
 
-Research prototype: compare **synthetic** earnings-call-style text to structured quarterly line items in DuckDB. Not a PCAOB/GAAS audit, not financial or legal advice. All companies and dialogue in `data/` are fictional.
+Research prototype: compare **synthetic** earnings-call-style text to structured quarterly line items in DuckDB. Not a PCAOB/GAAS audit, not financial or legal advice. All companies and dialogue in `data/` are fictional; synthetic tickers `AURA` and `SYNX` have no connection to NASDAQ: AURA, NYSE American: SYNX, or Synthetix (SNX).
 
 ## How to run
 
@@ -43,6 +43,10 @@ Golden JSON labels cases for future eval; the repo does **not** yet run all 52 t
 Design notes and corrections: [NOTES.md](NOTES.md) (author-maintained). Verified numbers: [CLAIMS.md](CLAIMS.md). File-level map: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). ADRs: [docs/decisions.md](docs/decisions.md).
 
 Pre-remediation baseline outputs: [baseline_dee729f/](baseline_dee729f/).
+
+## Citation & References
+
+See [REFERENCES.bib](REFERENCES.bib) for canonical literature (Loughran & McDonald 2011, SEC SAB 99, Brier 1950, Guo et al. 2017) and [CITATION.cff](CITATION.cff) for repository citation metadata.
 
 ## License
 

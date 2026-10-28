@@ -16,6 +16,10 @@ Numbers in README and public docs must appear here with a traceable source. `[un
 | Nexus FY2025 FCF total −$144M | golden | `data/golden_ground_truth.json` `NXUS_002` `total_fy2025_fcf`: -144 | agent | 2026-10-26 |
 | Synthetix claimed AI ARR $80M; $65M reclassified (81.25%) | scenario | `data/golden_ground_truth.json` `SYNX_001` verified_numbers | agent | 2026-10-26 |
 | Vortex control gross margin Q4 2025 ≈ 79.14% | tests | `tests/test_numeric_guardrail.py::test_verify_vortex_clean_control` audited_value > 0.75 | agent | 2026-10-26 |
-| pytest suite size (current) | metrics_log | `metrics_log.csv` latest row after `make metrics` | agent | 2026-10-26 |
+| pytest suite size (current: 87 tests) | CI / Makefile | `.venv/bin/pytest tests` (87 passed) | agent | 2026-10-28 |
+| Golden evaluation verdict accuracy (100.00%) | Makefile, eval_results | `scripts/run_golden_eval.py` / `data/eval_results.json` (52/52 cases) | agent | 2026-10-28 |
+| Brier score calibration metric (0.0076) | Makefile, eval_results | `src/eval/calibration.py` / `data/eval_results.json` (Brier 1950) | agent | 2026-10-28 |
+| Expected Calibration Error (0.0850) | Makefile, eval_results | `src/eval/calibration.py` / `data/eval_results.json` (Guo et al. 2017) | agent | 2026-10-28 |
+| Public markdown overclaiming grep hits (0) | CI / Makefile | `make grep-gate` / `scripts/grep_gate.sh` (0 hits) | agent | 2026-10-28 |
 | AST validation ~1.2 ms per query | docs/decisions.md ADR-01 | `[unverified]` — no benchmark script in repo | — | 2026-10-26 |
 | LLM inference 500–2000 ms | removed from README | `[unverified]` — not measured here | — | 2026-10-26 |

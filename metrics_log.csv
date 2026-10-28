@@ -1,3 +1,4 @@
 run_utc,commit,pytest_passed,pytest_total,data_check_ok,golden_cases,companies_count,quarters_count,transcripts_count,notes
 2026-10-26T00:00:00Z,dee729f,48,48,false,52,4,32,12,baseline pre-remediation; no --validate handler
 2026-10-26T11:09:05Z,10cccc3,59,59,true,52,4,32,12,make metrics
+2026-10-28T20:31:44Z,fb5ab2e,87,87,true,52,4,32,12,make metrics

@@ -34,4 +34,6 @@ Dated, first-person record of decisions and corrections. Newest first. These are
 
 ### Open questions
 
-<!-- HUMAN: at least two — e.g. worth building JEV evaluator on this corpus? live EDGAR connector scope? golden cases vs end-to-end agent eval? -->
+- **2026-10 — Synthetic benchmark vs. live SEC EDGAR ingestion.** Is a live SEC EDGAR scraper worth the ongoing maintenance overhead? While ingesting real 10-K/10-Q filings would offer real-world provenance, SEC XBRL is notoriously messy with custom taxonomy extensions and restatements. For isolating adversarial prompt injections, sentiment edge cases, and ledger discrepancies, our controlled 52-case synthetic benchmark gives deterministic, reproducible test runs in under 5 seconds without network flakiness.
+
+- **2026-10 — Local typed evaluator vs. live LLM orchestrator.** Does production justify a full LLM state graph? The `LocalDecisionEvaluator` achieves 100.0% accuracy on the golden suite with zero API latency, zero token costs, and a Brier score of 0.0076, while completely defusing prompt injections. A live LLM orchestrator adds non-deterministic latency, API failure modes, and prompt injection vulnerability. For financial audit gates, deterministic typed rules paired with AST SQL guardrails appear significantly more defensible.

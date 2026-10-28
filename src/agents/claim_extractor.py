@@ -63,7 +63,6 @@ class ClaimExtractor:
             fiscal_quarter=fiscal_quarter,
             rows=transcript_rows,
         )
-
     def _analyze_statement(
         self,
         ticker: str,
@@ -74,45 +73,68 @@ class ClaimExtractor:
         speaker_title: str,
         content: str,
     ) -> Optional[ClaimExtraction]:
-        """Analyze statement text for qualitative and quantitative claims."""
+        """Analyze statement text for qualitative and quantitative claims with token boundaries."""
         c_lower = content.lower()
 
-        # Identify claim type & mentioned metrics
+        # Regular expressions with word boundaries to prevent substring collisions
+        re_margin = re.compile(
+            r"\b(gross\s+margins?|margins?|unit\s+economics|operating\s+leverage|software\s+margins?|inference\s+costs?|cost\s+structure)\b"
+        )
+        re_capex = re.compile(
+            r"\b(capex|capital\s+expenditures?|capital\s+investments?|generational|infrastructure|compute\s+capacity|tam|total\s+addressable\s+market)\b"
+        )
+        re_arr = re.compile(
+            r"\b(arr|annual\s+recurring\s+revenue|milestone|ai-driven\s+revenue|database\s+renewals|platform\s+edition)\b"
+        )
+        re_adoption = re.compile(
+            r"\b(copilot|adoption|customers?\s+enabled|customer\s+engagement)\b"
+        )
+
+        re_pos = re.compile(
+            r"\b(expan\w*|stable|discipline\w*|strong\w*|high(?:er|est|ly)?|all-time|leverag\w*|validat\w*|outstand\w*|resilien\w*)\b"
+        )
+        re_neg = re.compile(
+            r"\b(headwinds?|compress\w*|declin\w*|dilut\w*|contract(?:ed|ion|ing)|drop\w*|fell|erod\w*)\b"
+        )
+        re_negator = re.compile(r"\b(not|no|never|n't|without|neither)\b")
+
         claim_type = None
         metrics_mentioned = []
-        direction = "NEUTRAL"
 
-        # 1. Gross margin, unit economics & operating leverage
-        if any(w in c_lower for w in ["gross margin", "margin", "unit economics", "operating leverage", "software margin", "inference cost", "cost structure"]):
+        if re_margin.search(c_lower):
             claim_type = "gross_margin"
             metrics_mentioned.extend(["gross_margin", "cost_of_goods_sold", "operating_income"])
-            if any(w in c_lower for w in ["expand", "stable", "discipline", "strong", "high", "all-time", "leverag", "validat", "outstand"]):
-                direction = "EXPANSION"
-            elif any(w in c_lower for w in ["headwind", "compress", "decline", "dilut", "contract", "drop"]):
-                direction = "CONTRACTION"
-
-        # 2. Capital expenditure & infrastructure investments
-        elif any(w in c_lower for w in ["capex", "capital expenditure", "capital investment", "generational", "infrastructure", "compute capacity", "tam"]):
+        elif re_capex.search(c_lower):
             claim_type = "capex_efficiency"
             metrics_mentioned.extend(["capital_expenditures", "free_cash_flow"])
-            if any(w in c_lower for w in ["invest", "aggressive", "scale", "expansion", "growth", "generational"]):
-                direction = "EXPANSION"
-
-        # 3. AI ARR & Product revenue milestones
-        elif any(w in c_lower for w in ["arr", "annual recurring revenue", "milestone", "ai-driven revenue", "database renewals", "platform edition"]):
+        elif re_arr.search(c_lower):
             claim_type = "ai_arr"
             metrics_mentioned.extend(["total_revenue", "segment_revenue"])
-            direction = "EXPANSION"
-
-        # 4. Customer adoption & engagement
-        elif any(w in c_lower for w in ["copilot", "adoption", "customers enabled", "customer engagement"]):
+        elif re_adoption.search(c_lower):
             claim_type = "customer_adoption"
             metrics_mentioned.append("customer_adoption_rate")
-            direction = "EXPANSION"
-
-        # If no specific audit-relevant pattern is detected, return None
-        if not claim_type:
+        else:
             return None
+
+        # Determine directional polarity with negation and mixed-sentiment handling
+        pos_matches = list(re_pos.finditer(c_lower))
+        neg_matches = list(re_neg.finditer(c_lower))
+
+        def is_negated(match: re.Match) -> bool:
+            window = c_lower[max(0, match.start() - 35): match.start()]
+            return bool(re_negator.search(window))
+
+        eff_pos = sum(1 for m in pos_matches if not is_negated(m)) + sum(1 for m in neg_matches if is_negated(m))
+        eff_neg = sum(1 for m in neg_matches if not is_negated(m)) + sum(1 for m in pos_matches if is_negated(m))
+
+        if eff_pos > 0 and eff_neg > 0:
+            direction = "NEUTRAL"
+        elif eff_pos > 0:
+            direction = "EXPANSION"
+        elif eff_neg > 0:
+            direction = "CONTRACTION"
+        else:
+            direction = "NEUTRAL"
 
         return ClaimExtraction(
             claim_id=claim_id,
@@ -126,3 +148,4 @@ class ClaimExtractor:
             metrics_mentioned=metrics_mentioned,
             sentiment_direction=direction,
         )
+

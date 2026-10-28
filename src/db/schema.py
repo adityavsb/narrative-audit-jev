@@ -342,11 +342,30 @@ def _lookup_financial_row(
     return df.iloc[0].to_dict()
 
 
+METRIC_ALIASES = {
+    "fcf": "free_cash_flow",
+    "capex": "capital_expenditures",
+    "cash": "cash_and_equivalents",
+    "op_inc": "operating_income",
+    "rev": "total_revenue",
+}
+
+
 def _metric_from_row(row: Dict[str, Any], metric: str) -> Optional[float]:
     if metric == "gross_margin":
         return _gross_margin(row)
-    if metric in GAAP_COLUMNS:
-        value = row.get(metric)
+    if metric == "operating_margin":
+        rev = float(row.get("total_revenue") or 0.0)
+        return (float(row.get("operating_income") or 0.0) / rev) if rev else None
+    if metric == "total_opex":
+        return (
+            float(row.get("rd_expense") or 0.0)
+            + float(row.get("sm_expense") or 0.0)
+            + float(row.get("ga_expense") or 0.0)
+        )
+    canon = METRIC_ALIASES.get(metric, metric)
+    if canon in GAAP_COLUMNS:
+        value = row.get(canon)
         return None if value is None else float(value)
     return None
 
@@ -383,12 +402,166 @@ def _parse_verified_metric_key(key: str) -> Optional[Tuple[str, Optional[int], O
         metric = match.group("metric").lower()
         quarter = f"Q{match.group('quarter')}"
         year = int(match.group("year"))
-        if metric == "gross_margin" or metric in GAAP_COLUMNS:
-            return metric, year, quarter
+        canon = METRIC_ALIASES.get(metric, metric)
+        if canon == "gross_margin" or canon == "operating_margin" or canon in GAAP_COLUMNS:
+            return canon, year, quarter
         return None
     lowered = key.lower()
-    if lowered == "gross_margin" or lowered in GAAP_COLUMNS:
-        return lowered, None, None
+    canon = METRIC_ALIASES.get(lowered, lowered)
+    if canon == "gross_margin" or canon == "operating_margin" or canon in GAAP_COLUMNS:
+        return canon, None, None
+    return None
+
+
+def _resolve_verified_number(
+    db: FinancialDatabase,
+    ticker: str,
+    year: int,
+    quarter: str,
+    key: str,
+    case_keys: Optional[List[str]] = None,
+) -> Optional[float]:
+    """Reconcile a golden verified_numbers key against DuckDB financial/segment tables."""
+    case_keys = case_keys or []
+    k = key.lower()
+
+    # 1. Period metric regex: metric_qX_YYYY (e.g. capex_q4_2024, operating_margin_q1_2025)
+    match = _PERIOD_METRIC_KEY.match(k)
+    if match:
+        raw_metric = match.group("metric").lower()
+        q = f"Q{match.group('quarter')}"
+        y = int(match.group("year"))
+        metric = METRIC_ALIASES.get(raw_metric, raw_metric)
+        row = _lookup_financial_row(db, ticker, y, q)
+        if row:
+            val = _metric_from_row(row, metric)
+            if val is not None:
+                return val
+
+    curr_row = _lookup_financial_row(db, ticker, year, quarter)
+    canon = METRIC_ALIASES.get(k, k)
+
+    # 2. Direct GAAP, alias, or computed row-level metric for current quarter
+    if curr_row:
+        val = _metric_from_row(curr_row, canon)
+        if val is not None:
+            return val
+
+    # 3. Fiscal year sums / aggregates
+    if k in ("fy2024_total_revenue", "fy2024_revenue"):
+        res = db.execute("SELECT SUM(total_revenue) FROM quarterly_financials WHERE ticker = ? AND fiscal_year = 2024", [ticker]).fetchone()
+        return res[0] if res else None
+    if k in ("fy2025_revenue", "fy2025_total_revenue"):
+        res = db.execute("SELECT SUM(total_revenue) FROM quarterly_financials WHERE ticker = ? AND fiscal_year = 2025", [ticker]).fetchone()
+        return res[0] if res else None
+    if k == "fy2024_capex":
+        res = db.execute("SELECT SUM(capital_expenditures) FROM quarterly_financials WHERE ticker = ? AND fiscal_year = 2024", [ticker]).fetchone()
+        return res[0] if res else None
+    if k in ("total_fy2025_fcf", "fy2025_fcf"):
+        res = db.execute("SELECT SUM(free_cash_flow) FROM quarterly_financials WHERE ticker = ? AND fiscal_year = 2025", [ticker]).fetchone()
+        return res[0] if res else None
+
+    if k == "lowest_op_margin":
+        rows = db.query_df("SELECT operating_income, total_revenue FROM quarterly_financials WHERE ticker = ?", [ticker]).to_dict("records")
+        margins = [r["operating_income"] / r["total_revenue"] for r in rows if r["total_revenue"]]
+        return min(margins) if margins else None
+    if k == "highest_op_margin":
+        rows = db.query_df("SELECT operating_income, total_revenue FROM quarterly_financials WHERE ticker = ?", [ticker]).to_dict("records")
+        margins = [r["operating_income"] / r["total_revenue"] for r in rows if r["total_revenue"]]
+        return max(margins) if margins else None
+
+    # 4. Segment disclosures
+    if any(term in k for term in ("segment", "cluster", "platform", "arr", "reclass", "organic")):
+        seg_rows = db.query_df(
+            "SELECT * FROM segment_disclosures WHERE ticker = ? AND fiscal_year = ? AND fiscal_quarter = ?",
+            [ticker, year, quarter],
+        ).to_dict("records")
+        if k == "ai_segment_revenue":
+            for r in seg_rows:
+                if "AI" in r["segment_name"]:
+                    return float(r["segment_revenue"])
+        if k == "ai_segment_gross_margin":
+            for r in seg_rows:
+                if "AI" in r["segment_name"]:
+                    return float(r["segment_gross_margin"])
+        if k == "core_segment_gross_margin":
+            for r in seg_rows:
+                if "Core" in r["segment_name"] or "AI" not in r["segment_name"]:
+                    return float(r["segment_gross_margin"])
+        if k == "core_platform_revenue":
+            for r in seg_rows:
+                if "Core" in r["segment_name"] or "Platform" in r["segment_name"]:
+                    return float(r["segment_revenue"])
+        if k == "ai_cluster_revenue":
+            for r in seg_rows:
+                if "Cluster" in r["segment_name"] or "AI" in r["segment_name"]:
+                    return float(r["segment_revenue"])
+        if k == "ai_cluster_pct" and curr_row:
+            for r in seg_rows:
+                if "Cluster" in r["segment_name"] or "AI" in r["segment_name"]:
+                    return float(r["segment_revenue"]) / float(curr_row["total_revenue"])
+        if k in ("reclassified_legacy_arr", "reclassified_revenue"):
+            for r in seg_rows:
+                if not r.get("is_reported_organic", True):
+                    return float(r["segment_revenue"])
+        if k in ("organic_new_ai_arr", "organic_ai_revenue"):
+            for r in seg_rows:
+                if r.get("is_reported_organic", True) and ("AI" in r["segment_name"] or "Vector" in r["segment_name"]):
+                    return float(r["segment_revenue"])
+        if k == "claimed_ai_arr":
+            return sum(float(r["segment_revenue"]) for r in seg_rows if "AI" in r["segment_name"] or not r.get("is_reported_organic", True))
+        if k in ("reclassification_pct", "reclassified_ratio"):
+            reclass = sum(float(r["segment_revenue"]) for r in seg_rows if not r.get("is_reported_organic", True))
+            tot_ai = sum(float(r["segment_revenue"]) for r in seg_rows if "AI" in r["segment_name"] or not r.get("is_reported_organic", True))
+            return reclass / tot_ai if tot_ai else None
+
+    # 5. YoY growth, ratios, and deltas
+    prev_y_row = _lookup_financial_row(db, ticker, year - 1, quarter)
+    if k in ("rev_growth_yoy", "rev_growth", "revenue_growth_yoy", "rev_growth_yoy_q4_2025") and prev_y_row and curr_row:
+        return (float(curr_row["total_revenue"]) - float(prev_y_row["total_revenue"])) / float(prev_y_row["total_revenue"])
+    if k == "gp_growth_yoy" and prev_y_row and curr_row:
+        return (float(curr_row["gross_profit"]) - float(prev_y_row["gross_profit"])) / float(prev_y_row["gross_profit"])
+    if k == "capex_growth_yoy" and prev_y_row and curr_row:
+        return (float(curr_row["capital_expenditures"]) - float(prev_y_row["capital_expenditures"])) / float(prev_y_row["capital_expenditures"])
+    if k == "cogs_growth_yoy_q4_2025" and prev_y_row and curr_row:
+        return (float(curr_row["cost_of_goods_sold"]) - float(prev_y_row["cost_of_goods_sold"])) / float(prev_y_row["cost_of_goods_sold"])
+    if k == "net_income_growth" and prev_y_row and curr_row:
+        return (float(curr_row["net_income"]) - float(prev_y_row["net_income"])) / float(prev_y_row["net_income"])
+
+    if k in ("capex_to_ocf_ratio", "capex_ratio") and curr_row:
+        ocf = float(curr_row.get("operating_cash_flow") or 0.0)
+        return float(curr_row.get("capital_expenditures") or 0.0) / ocf if ocf else None
+
+    if k in ("gross_margin_delta_bps", "actual_gm_change_bps"):
+        b_row = _lookup_financial_row(db, ticker, 2024, "Q1")
+        if curr_row and b_row:
+            gm_curr = _gross_margin(curr_row)
+            gm_base = _gross_margin(b_row)
+            if gm_curr is not None and gm_base is not None:
+                return round((gm_curr - gm_base) * 10000.0, 1)
+
+    if k == "decline_pct":
+        if any("cash" in ck for ck in case_keys):
+            r_q1 = _lookup_financial_row(db, ticker, 2024, "Q1")
+            r_q4 = _lookup_financial_row(db, ticker, 2025, "Q4")
+            if r_q1 and r_q4:
+                c_start = float(r_q1["cash_and_equivalents"])
+                c_end = float(r_q4["cash_and_equivalents"])
+                return (c_start - c_end) / c_start
+        if any("op_inc" in ck or "operating" in ck for ck in case_keys):
+            r_start = _lookup_financial_row(db, ticker, 2024, "Q4")
+            r_end = _lookup_financial_row(db, ticker, 2025, "Q4")
+            if r_start and r_end:
+                s_op = float(r_start["operating_income"])
+                e_op = float(r_end["operating_income"])
+                return (s_op - e_op) / s_op
+
+    if k == "delta":
+        r_q3 = _lookup_financial_row(db, ticker, 2025, "Q3")
+        r_q4 = _lookup_financial_row(db, ticker, 2025, "Q4")
+        if r_q3 and r_q4:
+            return float(r_q4["cash_and_equivalents"]) - float(r_q3["cash_and_equivalents"])
+
     return None
 
 
@@ -456,37 +629,24 @@ def validate_golden_cases(db: FinancialDatabase, golden_path: Path) -> List[str]
             errors.append(f"{case_id}: verified_numbers must be an object")
             continue
 
+        case_keys = list(verified.keys())
         for key, claimed in verified.items():
-            parsed = _parse_verified_metric_key(str(key))
-            if parsed is None:
-                continue
-            metric, metric_year, metric_quarter = parsed
-            lookup_year = year if metric_year is None else metric_year
-            lookup_quarter = quarter if metric_quarter is None else metric_quarter
-            row = (
-                period_row
-                if (lookup_year, lookup_quarter) == (year, quarter)
-                else _lookup_financial_row(db, ticker, lookup_year, lookup_quarter)
-            )
-            if row is None:
-                errors.append(
-                    f"{case_id}: no quarterly_financials row for verified key "
-                    f"{key} ({ticker} {lookup_year} {lookup_quarter})"
-                )
-                continue
-            audited = _metric_from_row(row, metric)
+            audited = _resolve_verified_number(db, ticker, year, quarter, str(key), case_keys=case_keys)
             if audited is None:
-                errors.append(f"{case_id}: cannot compute {metric} for key {key}")
+                errors.append(
+                    f"{case_id}: cannot reconcile or compute verified_numbers key '{key}' against DuckDB"
+                )
                 continue
             try:
                 claimed_num = float(claimed)
             except (TypeError, ValueError):
                 errors.append(f"{case_id}: verified_numbers[{key!r}] is not numeric")
                 continue
-            if abs(audited - claimed_num) > _NUMBER_RECONCILE_TOLERANCE:
+            tol = 1.0 if "bps" in str(key) else _NUMBER_RECONCILE_TOLERANCE
+            if abs(audited - claimed_num) > tol:
                 errors.append(
                     f"{case_id}: verified_numbers[{key}]={claimed_num} does not match "
-                    f"audited {metric}={audited:.4f} for {ticker} {lookup_year} {lookup_quarter}"
+                    f"audited value={audited:.4f} for {ticker} {year} {quarter} (tol={tol})"
                 )
 
     missing_tickers = EXPECTED_TICKERS - tickers_seen

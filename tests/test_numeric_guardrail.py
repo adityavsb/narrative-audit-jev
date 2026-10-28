@@ -155,3 +155,55 @@ class TestNumericGuardrail:
         assert fact_check.metric != "general_accounting_reconciliation"
         assert fact_check.audited_value is not None
         assert abs(fact_check.audited_value - 0.61) < 0.01
+
+    def test_margin_claim_2024_uses_baseline_fallback(self, populated_db):
+        """Claims in 2024 without prior YoY year-1 row must fall back to earliest baseline."""
+        guardrail = NumericGuardrail()
+        claim = _margin_claim(
+            ticker="AURA",
+            fiscal_year=2024,
+            fiscal_quarter="Q4",
+            statement="Gross margins expanded strongly across all product lines.",
+            sentiment_direction="EXPANSION",
+        )
+        fact_check = guardrail.verify_claim(populated_db, claim)
+        assert fact_check.metric == "gross_margin"
+        assert fact_check.is_verified is False  # Compressed from 79% (Q1) to 71% (Q4)
+        assert "contradiction" in fact_check.explanation.lower() or "dilution" in fact_check.explanation.lower()
+
+    def test_margin_percentage_discrepancy_detected(self, populated_db):
+        """Stated percentage in statement must be parsed and reconciled against audited margin."""
+        guardrail = NumericGuardrail()
+        claim = _margin_claim(
+            ticker="AURA",
+            fiscal_year=2025,
+            fiscal_quarter="Q4",
+            statement="Our gross margin was 90% this quarter based on software efficiency.",
+            sentiment_direction="NEUTRAL",
+        )
+        fact_check = guardrail.verify_claim(populated_db, claim)
+        assert fact_check.metric == "gross_margin_magnitude"
+        assert fact_check.is_verified is False
+        assert fact_check.claimed_value == 0.9
+        assert abs(fact_check.audited_value - 0.61) < 0.01
+        assert "contradiction" in fact_check.explanation.lower()
+
+    def test_capex_with_margin_discipline_not_hijacked(self, populated_db):
+        """Capex claims mentioning margin discipline must not be hijacked by gross margin path."""
+        guardrail = NumericGuardrail()
+        claim = ClaimExtraction(
+            claim_id="capex_margin_test",
+            ticker="NXUS",
+            fiscal_year=2025,
+            fiscal_quarter="Q4",
+            speaker_name="CEO",
+            speaker_title="CEO",
+            statement="We spent aggressively on infrastructure to scale capacity while maintaining margin discipline.",
+            claim_type="capex_efficiency",
+            metrics_mentioned=["capital_expenditures", "free_cash_flow"],
+            sentiment_direction="EXPANSION",
+        )
+        fact_check = guardrail.verify_claim(populated_db, claim)
+        # Should evaluate FCF drain, not gross margin
+        assert fact_check.metric == "free_cash_flow_drain"
+        assert fact_check.is_verified is False

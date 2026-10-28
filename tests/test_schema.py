@@ -133,3 +133,42 @@ def test_duckdb_connection_is_hardened(db: FinancialDatabase):
         db.conn.execute("SET enable_external_access=true")
     assert "lock" in str(exc_info_lock.value).lower()
 
+
+def test_validate_benchmark_detects_tampered_aliased_and_segment_keys(tmp_path):
+    """Verify that aliased and segment verified_numbers keys are actively validated."""
+    repo = Path(__file__).resolve().parent.parent
+    golden_src = repo / "data" / "golden_ground_truth.json"
+    tampered = tmp_path / "golden_ground_truth.json"
+    cases = json.loads(golden_src.read_text())
+
+    # Tamper with an aliased key in AURA_012 (cash_q3_2025)
+    aura_012 = next(c for c in cases if c["case_id"] == "AURA_012")
+    aura_012["ground_truth"]["verified_numbers"]["cash_q3_2025"] = 999.0
+
+    tampered.write_text(json.dumps(cases))
+    errors, _ = validate_benchmark(
+        benchmark_dir=repo / "data" / "benchmark",
+        golden_path=tampered,
+    )
+    assert errors
+    assert any("cash_q3_2025" in err for err in errors)
+
+
+def test_validate_benchmark_flags_unresolvable_keys(tmp_path):
+    """Verify that unknown/unresolvable verified_numbers keys are not silently skipped."""
+    repo = Path(__file__).resolve().parent.parent
+    golden_src = repo / "data" / "golden_ground_truth.json"
+    tampered = tmp_path / "golden_ground_truth.json"
+    cases = json.loads(golden_src.read_text())
+
+    # Add an unresolvable key to case 0
+    cases[0]["ground_truth"]["verified_numbers"]["unsupported_metric_xyz"] = 42.0
+
+    tampered.write_text(json.dumps(cases))
+    errors, _ = validate_benchmark(
+        benchmark_dir=repo / "data" / "benchmark",
+        golden_path=tampered,
+    )
+    assert errors
+    assert any("unsupported_metric_xyz" in err for err in errors)
+

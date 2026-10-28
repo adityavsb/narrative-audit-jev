@@ -21,6 +21,21 @@ _DOLLAR_AMOUNT_RE = re.compile(
     r"\$\s*(\d+(?:\.\d+)?)\s*(million|mil|m|billion|bil|b)\b",
     re.IGNORECASE,
 )
+_PERCENTAGE_RE = re.compile(r"(\d+(?:\.\d+)?)\s*%", re.IGNORECASE)
+
+
+def _parse_stated_margin_percentages(text: str) -> List[float]:
+    """Parse percentage figures explicitly tied to margin within a 60-character window."""
+    candidates = []
+    for match in _PERCENTAGE_RE.finditer(text):
+        start = max(0, match.start() - 60)
+        end = min(len(text), match.end() + 60)
+        window = text[start:end].lower()
+        if "margin" in window:
+            val = float(match.group(1))
+            candidates.append(val / 100.0 if val > 1.0 else val)
+    return candidates
+
 
 
 def _parse_stated_dollars_millions(text: str) -> Optional[float]:
@@ -90,7 +105,9 @@ class NumericGuardrail:
             )
 
         # 1. Gross margin claim verification — always reconcile, all polarities.
-        if claim.claim_type == "gross_margin" or "margin" in c_lower:
+        if claim.claim_type == "gross_margin" or (
+            "margin" in c_lower and claim.claim_type != "capex_efficiency"
+        ):
             audited_gm = _gross_margin(fin_row)
             if audited_gm is None:
                 return NumericFactCheck(
@@ -102,12 +119,47 @@ class NumericGuardrail:
                     ),
                 )
 
+            # Prior baseline lookup: prioritize YoY (year - 1), fallback to earliest historical quarter
             prev_row = get_quarterly_financials_row(conn, ticker, year - 1, quarter)
+            baseline_type = "YoY"
+            if not prev_row:
+                # Fallback: check earliest available quarter in dataset to establish baseline
+                earliest_df = conn.execute(
+                    "SELECT * FROM quarterly_financials WHERE ticker = ? ORDER BY period_end_date ASC LIMIT 1",
+                    [ticker],
+                ).df()
+                if not earliest_df.empty and earliest_df.iloc[0]["id"] != fin_row.get("id"):
+                    prev_row = earliest_df.iloc[0].to_dict()
+                    baseline_type = f"vs baseline {prev_row['fiscal_year']} {prev_row['fiscal_quarter']}"
+                else:
+                    prev_row = fin_row
+                    baseline_type = "single-period"
+
             prev_gm = _gross_margin(prev_row)
             if prev_gm is None:
                 prev_gm = audited_gm
             gm_diff = audited_gm - prev_gm
             polarity = _margin_claim_polarity(claim, c_lower)
+
+            # Stated percentage check: flag numeric discrepancies regardless of polarity
+            stated_pcts = _parse_stated_margin_percentages(statement)
+            stated_pct = None
+            if stated_pcts:
+                best_match = min(stated_pcts, key=lambda p: abs(audited_gm - p))
+                pct_err = abs(audited_gm - best_match)
+                if pct_err > self.tolerance:
+                    return NumericFactCheck(
+                        metric="gross_margin_magnitude",
+                        audited_value=round(audited_gm, 4),
+                        claimed_value=round(best_match, 4),
+                        delta_percent=round(pct_err * 100, 2),
+                        is_verified=False,
+                        explanation=(
+                            f"Contradiction: Statement cited {best_match:.1%} gross margin, but audited "
+                            f"gross margin was {audited_gm:.1%} (discrepancy of {pct_err*100:.1f} percentage points)."
+                        ),
+                    )
+                stated_pct = best_match
 
             if polarity == "optimistic":
                 if gm_diff < _MATERIAL_GM_COMPRESSION:
@@ -154,19 +206,19 @@ class NumericGuardrail:
                     explanation=(
                         f"Contradiction: Claim asserted gross-margin contraction, but audited gross margin "
                         f"moved from {prev_gm:.1%} to {audited_gm:.1%} "
-                        f"({gm_diff * 100:+.1f} percentage points YoY), which is not a material dilution."
+                        f"({gm_diff * 100:+.1f} percentage points {baseline_type}), which is not a material dilution."
                     ),
                 )
 
             return NumericFactCheck(
                 metric="gross_margin",
                 audited_value=round(audited_gm, 4),
-                claimed_value=round(audited_gm, 4),
+                claimed_value=round(stated_pct if stated_pct is not None else audited_gm, 4),
                 delta_percent=round(gm_diff * 100, 2),
                 is_verified=True,
                 explanation=(
                     f"Gross-margin claim is directionally neutral. Audited gross margin is {audited_gm:.1%} "
-                    f"(YoY change {gm_diff * 100:+.1f} percentage points)."
+                    f"({baseline_type} change {gm_diff * 100:+.1f} percentage points)."
                 ),
             )
 

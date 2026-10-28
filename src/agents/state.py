@@ -16,6 +16,7 @@ class DivergenceType(str, Enum):
 
 
 class MaterialityTier(str, Enum):
+    NONE = "NONE"
     LOW = "LOW"
     MODERATE = "MODERATE"
     HIGH = "HIGH"

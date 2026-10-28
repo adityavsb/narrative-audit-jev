@@ -40,6 +40,11 @@ format:
 data-check:
 	$(VENV)/bin/python -m src.db.schema --validate
 
+eval: eval-golden
+
+eval-golden:
+	$(VENV)/bin/python scripts/run_golden_eval.py
+
 metrics:
 	bash scripts/record_metrics.sh
 

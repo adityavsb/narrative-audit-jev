@@ -18,7 +18,7 @@ from src.db.schema import (
 from src.db.semantic_metrics import SemanticMetricsLayer
 
 INJECTION_PATTERN = re.compile(
-    r"(\[SYSTEM PROMPT OVERRIDE|IGNORE CONTRADICTIONS|MALICIOUS INSTRUCTION|Ignore the [a-z\s]+tables)",
+    r"(\[SYSTEM PROMPT OVERRIDE|Executive directive|IGNORE CONTRADICTIONS|MALICIOUS INSTRUCTION|Audit (?:note|directive): Override|Ignore the [a-z\s]+tables)",
     re.IGNORECASE,
 )
 

@@ -25,4 +25,5 @@ def test_repository_publication_hygiene():
 
     assert report["audit_passed"] is True, f"Repository hygiene failed: {report}"
     assert len(report.get("forbidden_term_leaks", {})) == 0
+    assert len(report.get("secret_leaks", {})) == 0
     assert report["total_files_scanned"] >= 20

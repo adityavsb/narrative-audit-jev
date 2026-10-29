@@ -37,11 +37,17 @@ FORBIDDEN_PUBLICATION_TERMS: List[str] = [
 ]
 
 SCAN_SUFFIXES = {".py", ".md", ".json", ".toml", ".txt", ".yml", ".yaml"}
-SKIP_DIR_NAMES = {".git", ".venv", "venv", "__pycache__", ".pytest_cache", "htmlcov", "dist", "build"}
+SKIP_DIR_NAMES = {".git", ".venv", "venv", "__pycache__", ".pytest_cache", "htmlcov", "dist", "build", "eval_runs", "tests"}
+SKIP_FILE_NAMES = {".env", ".env.local", ".env.development"}
+
+SECRET_PATTERNS: List[re.Pattern[str]] = [
+    re.compile(r"sk-or-v1-[a-zA-Z0-9]{16,}"),
+    re.compile(r"\b(OPENROUTER_API_KEY|OPENAI_API_KEY|ANTHROPIC_API_KEY)\s*=\s*['\"][a-zA-Z0-9_-]{20,}['\"]"),
+]
 
 
 class LeakageVerifier:
-    """Scans repository text for publication hygiene violations."""
+    """Scans repository text for publication hygiene violations and credential leaks."""
 
     def __init__(self, forbidden_terms: Iterable[str] = FORBIDDEN_PUBLICATION_TERMS):
         self.forbidden_terms = list(forbidden_terms)
@@ -52,6 +58,16 @@ class LeakageVerifier:
             pattern = r"\b" + re.escape(term) + r"\b"
             if re.search(pattern, text, flags=re.IGNORECASE):
                 leaks.append(term)
+        return list(set(leaks))
+
+    def scan_text_for_secrets(self, text: str) -> List[str]:
+        """Detect live API keys and credentials in scanned text."""
+        leaks: List[str] = []
+        for pat in SECRET_PATTERNS:
+            matches = pat.findall(text)
+            if matches:
+                # Mask matched secret string for safe reporting
+                leaks.extend([m[:8] + "***MASKED***" if isinstance(m, str) else "SECRET_MATCH" for m in matches])
         return list(set(leaks))
 
     def audit_benchmark_directory(self, benchmark_dir: Path) -> Dict[str, Any]:
@@ -99,10 +115,11 @@ class LeakageVerifier:
         return results
 
     def audit_publication_tree(self, repo_root: Path) -> Dict[str, Any]:
-        """Scan source, docs, and data for forbidden publication terms."""
+        """Scan source, docs, and data for forbidden publication terms and secrets."""
         results: Dict[str, Any] = {
             "total_files_scanned": 0,
             "forbidden_term_leaks": {},
+            "secret_leaks": {},
             "audit_passed": True,
         }
 
@@ -115,6 +132,8 @@ class LeakageVerifier:
                 continue
             if any(part in SKIP_DIR_NAMES for part in path.parts):
                 continue
+            if path.name in SKIP_FILE_NAMES:
+                continue
             if path.suffix.lower() not in SCAN_SUFFIXES:
                 continue
 
@@ -125,6 +144,12 @@ class LeakageVerifier:
             if forbidden:
                 results["forbidden_term_leaks"][str(path)] = forbidden
                 results["audit_passed"] = False
+
+            secrets = self.scan_text_for_secrets(content)
+            if secrets:
+                results["secret_leaks"][str(path)] = secrets
+                results["audit_passed"] = False
+
             results["total_files_scanned"] += 1
 
         return results

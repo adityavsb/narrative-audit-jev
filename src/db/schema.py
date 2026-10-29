@@ -314,8 +314,9 @@ def default_golden_path() -> Path:
 def get_default_db(benchmark_path: Optional[Path] = None) -> FinancialDatabase:
     """Factory creating an in-memory database populated with benchmark data."""
     db = FinancialDatabase(":memory:")
-    if benchmark_path and benchmark_path.exists():
-        db.load_from_benchmark_dir(benchmark_path)
+    bench = benchmark_path if benchmark_path is not None else default_benchmark_dir()
+    if bench and bench.exists():
+        db.load_from_benchmark_dir(bench)
     return db
 
 

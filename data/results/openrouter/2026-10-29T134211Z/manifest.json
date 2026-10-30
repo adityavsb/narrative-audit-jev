@@ -1,0 +1,36 @@
+{
+  "source": "local_eval_runs_import",
+  "no_api_rerun": true,
+  "synthetic_corpus": true,
+  "git_commit_at_import": "740e670cbbc6f8202ed9395110216308eb180f5e",
+  "import_utc": "2026-10-30T09:05:19.047165+00:00",
+  "summary_timestamp": "2026-10-29T13:42:11.989522+00:00",
+  "source_files": [
+    "data/eval_runs/openrouter_comparison_summary.json",
+    "data/eval_runs/checkpoint_deepseek_deepseek-v4.1-flash.json",
+    "data/eval_runs/checkpoint_perplexity_pplx-decider-flash-v1.2.json",
+    "data/eval_runs/checkpoint_qwen_qwen3.7-flash.json",
+    "data/eval_runs/checkpoint_Local Rule Engine (Heuristic).json"
+  ],
+  "python_version": "3.13.6",
+  "duckdb_version": "2.0.0",
+  "model_ids": [
+    "deepseek/deepseek-v4.1-flash",
+    "qwen/qwen3.7-flash",
+    "perplexity/pplx-decider-flash-v1.2"
+  ],
+  "openrouter_defaults": {
+    "temperature": 0.0,
+    "seed": 42,
+    "max_retries": 3
+  },
+  "cases_per_publish_checkpoint": 64,
+  "contains_fail_open_fallbacks": false,
+  "fallback_case_ids": [],
+  "fallback_by_model": {
+    "deepseek_deepseek-v4.1-flash": [],
+    "perplexity_pplx-decider-flash-v1.2": [],
+    "qwen_qwen3.7-flash": [],
+    "local_rule_engine_heuristic": []
+  }
+}

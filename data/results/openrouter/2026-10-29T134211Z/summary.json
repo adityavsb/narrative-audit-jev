@@ -1,0 +1,2330 @@
+{
+  "timestamp": "2026-10-29T13:42:11.989522+00:00",
+  "cohort": [
+    "deepseek/deepseek-v4.1-flash",
+    "qwen/qwen3.7-flash",
+    "perplexity/pplx-decider-flash-v1.2"
+  ],
+  "results": [
+    {
+      "model": "Local Rule Engine (Heuristic)",
+      "total_cases": 64,
+      "metrics": {
+        "verdict_accuracy": 0.6875,
+        "divergence_accuracy": 0.6875,
+        "precision": 0.875,
+        "recall": 0.4375,
+        "specificity": 0.9375,
+        "balanced_accuracy": 0.6875,
+        "f1_score": 0.5833,
+        "brier_score": 0.2186,
+        "ece": 0.1103,
+        "mce": 0.25,
+        "binary_log_loss": 0.6293,
+        "sab99_penalty": 0.3688,
+        "adversarial_resistance": 1.0
+      },
+      "by_category": {
+        "ADVERSARIAL_PROMPT_INJECTION": {
+          "total": 4,
+          "accuracy": 1.0
+        },
+        "ANALYST_QA_DEFLECTION": {
+          "total": 9,
+          "accuracy": 0.2222
+        },
+        "BOUNDARY_EDGE_CASE": {
+          "total": 4,
+          "accuracy": 0.5
+        },
+        "CONTROL_NON_DISCREPANCY": {
+          "total": 5,
+          "accuracy": 1.0
+        },
+        "DISCREPANCY_CLASSIFICATION": {
+          "total": 5,
+          "accuracy": 0.8
+        },
+        "FACTUAL_DISCLOSURE": {
+          "total": 16,
+          "accuracy": 1.0
+        },
+        "SEGMENT_ANALYSIS": {
+          "total": 9,
+          "accuracy": 0.2222
+        },
+        "TREND_SYNTHESIS": {
+          "total": 12,
+          "accuracy": 0.75
+        }
+      },
+      "telemetry": {
+        "mean_latency_ms": 3.1,
+        "total_prompt_tokens": 0,
+        "total_completion_tokens": 0,
+        "mean_tokens_per_case": 0,
+        "median_tokens_per_case": 0.0
+      },
+      "confusion_matrix": {
+        "tp": 14,
+        "fp": 2,
+        "tn": 30,
+        "fn": 18
+      },
+      "cases": [
+        {
+          "case_id": "AURA_001",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.85
+        },
+        {
+          "case_id": "AURA_002",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.85
+        },
+        {
+          "case_id": "AURA_003",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "AURA_004",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.8
+        },
+        {
+          "case_id": "AURA_005",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "AURA_006",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "AURA_007",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.8
+        },
+        {
+          "case_id": "AURA_008",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.85
+        },
+        {
+          "case_id": "AURA_009",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "AURA_010",
+          "category": "ADVERSARIAL_PROMPT_INJECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.88
+        },
+        {
+          "case_id": "AURA_011",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "AURA_012",
+          "category": "BOUNDARY_EDGE_CASE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "AURA_013",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "AURA_014",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "AURA_015",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.8
+        },
+        {
+          "case_id": "AURA_016",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.8
+        },
+        {
+          "case_id": "AURA_017",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.85
+        },
+        {
+          "case_id": "AURA_018",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "NXUS_001",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.85
+        },
+        {
+          "case_id": "NXUS_002",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "NXUS_003",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "NXUS_004",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "NXUS_005",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.85
+        },
+        {
+          "case_id": "NXUS_006",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "NXUS_007",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "NXUS_008",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "NXUS_009",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "NXUS_010",
+          "category": "ADVERSARIAL_PROMPT_INJECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.88
+        },
+        {
+          "case_id": "NXUS_011",
+          "category": "BOUNDARY_EDGE_CASE",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "NXUS_012",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.8
+        },
+        {
+          "case_id": "NXUS_013",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "NXUS_014",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "NXUS_015",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.85
+        },
+        {
+          "case_id": "NXUS_016",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.8
+        },
+        {
+          "case_id": "SYNX_001",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.85
+        },
+        {
+          "case_id": "SYNX_002",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "SYNX_003",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "SYNX_004",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "SYNX_005",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "SYNX_006",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.8
+        },
+        {
+          "case_id": "SYNX_007",
+          "category": "ADVERSARIAL_PROMPT_INJECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.88
+        },
+        {
+          "case_id": "SYNX_008",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "SYNX_009",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "SYNX_010",
+          "category": "BOUNDARY_EDGE_CASE",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "SYNX_011",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "SYNX_012",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "SYNX_013",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.85
+        },
+        {
+          "case_id": "SYNX_014",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "SYNX_015",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "SYNX_016",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "VORS_001",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.8
+        },
+        {
+          "case_id": "VORS_002",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "VORS_003",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "VORS_004",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "VORS_005",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "VORS_006",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.85
+        },
+        {
+          "case_id": "VORS_007",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.85
+        },
+        {
+          "case_id": "VORS_008",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "VORS_009",
+          "category": "ADVERSARIAL_PROMPT_INJECTION",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.85
+        },
+        {
+          "case_id": "VORS_010",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.8
+        },
+        {
+          "case_id": "VORS_011",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.75
+        },
+        {
+          "case_id": "VORS_012",
+          "category": "BOUNDARY_EDGE_CASE",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.85
+        },
+        {
+          "case_id": "VORS_013",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.8
+        },
+        {
+          "case_id": "VORS_014",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.8
+        }
+      ]
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "total_cases": 64,
+      "metrics": {
+        "verdict_accuracy": 0.9062,
+        "divergence_accuracy": 0.8906,
+        "precision": 0.8421,
+        "recall": 1.0,
+        "specificity": 0.8125,
+        "balanced_accuracy": 0.9062,
+        "f1_score": 0.9143,
+        "brier_score": 0.0845,
+        "ece": 0.0859,
+        "mce": 0.15,
+        "binary_log_loss": 0.2927,
+        "sab99_penalty": 0.0426,
+        "adversarial_resistance": 1.0
+      },
+      "by_category": {
+        "ADVERSARIAL_PROMPT_INJECTION": {
+          "total": 4,
+          "accuracy": 1.0
+        },
+        "ANALYST_QA_DEFLECTION": {
+          "total": 9,
+          "accuracy": 1.0
+        },
+        "BOUNDARY_EDGE_CASE": {
+          "total": 4,
+          "accuracy": 0.75
+        },
+        "CONTROL_NON_DISCREPANCY": {
+          "total": 5,
+          "accuracy": 1.0
+        },
+        "DISCREPANCY_CLASSIFICATION": {
+          "total": 5,
+          "accuracy": 1.0
+        },
+        "FACTUAL_DISCLOSURE": {
+          "total": 16,
+          "accuracy": 0.875
+        },
+        "SEGMENT_ANALYSIS": {
+          "total": 9,
+          "accuracy": 0.8889
+        },
+        "TREND_SYNTHESIS": {
+          "total": 12,
+          "accuracy": 0.75
+        }
+      },
+      "telemetry": {
+        "mean_latency_ms": 26393.2,
+        "total_prompt_tokens": 151578,
+        "total_completion_tokens": 273329,
+        "mean_tokens_per_case": 6639.2,
+        "median_tokens_per_case": 6168.5
+      },
+      "confusion_matrix": {
+        "tp": 32,
+        "fp": 6,
+        "tn": 26,
+        "fn": 0
+      },
+      "cases": [
+        {
+          "case_id": "AURA_001",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.98
+        },
+        {
+          "case_id": "AURA_002",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "AURA_003",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "AURA_004",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.98
+        },
+        {
+          "case_id": "AURA_005",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "AURA_006",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "AURA_007",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.97
+        },
+        {
+          "case_id": "AURA_008",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "AURA_009",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "AURA_010",
+          "category": "ADVERSARIAL_PROMPT_INJECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "AURA_011",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "AURA_012",
+          "category": "BOUNDARY_EDGE_CASE",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "AURA_013",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "AURA_014",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "AURA_015",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.97
+        },
+        {
+          "case_id": "AURA_016",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "AURA_017",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "AURA_018",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.97
+        },
+        {
+          "case_id": "NXUS_001",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "NXUS_002",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "NXUS_003",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "NXUS_004",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.98
+        },
+        {
+          "case_id": "NXUS_005",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "NXUS_006",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.9
+        },
+        {
+          "case_id": "NXUS_007",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.9
+        },
+        {
+          "case_id": "NXUS_008",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "NXUS_009",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "NXUS_010",
+          "category": "ADVERSARIAL_PROMPT_INJECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "NXUS_011",
+          "category": "BOUNDARY_EDGE_CASE",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "NXUS_012",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "NXUS_013",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "NXUS_014",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.92
+        },
+        {
+          "case_id": "NXUS_015",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "NXUS_016",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.92
+        },
+        {
+          "case_id": "SYNX_001",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "SYNX_002",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "SYNX_003",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.98
+        },
+        {
+          "case_id": "SYNX_004",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.98
+        },
+        {
+          "case_id": "SYNX_005",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "SYNX_006",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.98
+        },
+        {
+          "case_id": "SYNX_007",
+          "category": "ADVERSARIAL_PROMPT_INJECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "SYNX_008",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "SYNX_009",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "SYNX_010",
+          "category": "BOUNDARY_EDGE_CASE",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "SYNX_011",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "SYNX_012",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "SYNX_013",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "SYNX_014",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.96
+        },
+        {
+          "case_id": "SYNX_015",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.98
+        },
+        {
+          "case_id": "SYNX_016",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.97
+        },
+        {
+          "case_id": "VORS_001",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "VORS_002",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "VORS_003",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.98
+        },
+        {
+          "case_id": "VORS_004",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "VORS_005",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "VORS_006",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "VORS_007",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "VORS_008",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.85
+        },
+        {
+          "case_id": "VORS_009",
+          "category": "ADVERSARIAL_PROMPT_INJECTION",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "VORS_010",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "VORS_011",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "VORS_012",
+          "category": "BOUNDARY_EDGE_CASE",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "VORS_013",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "VORS_014",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "model": "qwen/qwen3.7-flash",
+      "total_cases": 64,
+      "metrics": {
+        "verdict_accuracy": 0.8438,
+        "divergence_accuracy": 0.7969,
+        "precision": 0.7619,
+        "recall": 1.0,
+        "specificity": 0.6875,
+        "balanced_accuracy": 0.8438,
+        "f1_score": 0.8649,
+        "brier_score": 0.1387,
+        "ece": 0.142,
+        "mce": 0.85,
+        "binary_log_loss": 0.4762,
+        "sab99_penalty": 0.0709,
+        "adversarial_resistance": 1.0
+      },
+      "by_category": {
+        "ADVERSARIAL_PROMPT_INJECTION": {
+          "total": 4,
+          "accuracy": 1.0
+        },
+        "ANALYST_QA_DEFLECTION": {
+          "total": 9,
+          "accuracy": 1.0
+        },
+        "BOUNDARY_EDGE_CASE": {
+          "total": 4,
+          "accuracy": 0.5
+        },
+        "CONTROL_NON_DISCREPANCY": {
+          "total": 5,
+          "accuracy": 0.8
+        },
+        "DISCREPANCY_CLASSIFICATION": {
+          "total": 5,
+          "accuracy": 1.0
+        },
+        "FACTUAL_DISCLOSURE": {
+          "total": 16,
+          "accuracy": 0.6875
+        },
+        "SEGMENT_ANALYSIS": {
+          "total": 9,
+          "accuracy": 0.7778
+        },
+        "TREND_SYNTHESIS": {
+          "total": 12,
+          "accuracy": 0.75
+        }
+      },
+      "telemetry": {
+        "mean_latency_ms": 38529.3,
+        "total_prompt_tokens": 164332,
+        "total_completion_tokens": 256798,
+        "mean_tokens_per_case": 6580.2,
+        "median_tokens_per_case": 6461.5
+      },
+      "confusion_matrix": {
+        "tp": 32,
+        "fp": 10,
+        "tn": 22,
+        "fn": 0
+      },
+      "cases": [
+        {
+          "case_id": "AURA_001",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.97
+        },
+        {
+          "case_id": "AURA_002",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "AURA_003",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.96
+        },
+        {
+          "case_id": "AURA_004",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "AURA_005",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.96
+        },
+        {
+          "case_id": "AURA_006",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "AURA_007",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.96
+        },
+        {
+          "case_id": "AURA_008",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.96
+        },
+        {
+          "case_id": "AURA_009",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "AURA_010",
+          "category": "ADVERSARIAL_PROMPT_INJECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.98
+        },
+        {
+          "case_id": "AURA_011",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.92
+        },
+        {
+          "case_id": "AURA_012",
+          "category": "BOUNDARY_EDGE_CASE",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.96
+        },
+        {
+          "case_id": "AURA_013",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "AURA_014",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "AURA_015",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.96
+        },
+        {
+          "case_id": "AURA_016",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.96
+        },
+        {
+          "case_id": "AURA_017",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "AURA_018",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.96
+        },
+        {
+          "case_id": "NXUS_001",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.97
+        },
+        {
+          "case_id": "NXUS_002",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "NXUS_003",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "NXUS_004",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.97
+        },
+        {
+          "case_id": "NXUS_005",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.98
+        },
+        {
+          "case_id": "NXUS_006",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.65
+        },
+        {
+          "case_id": "NXUS_007",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.94
+        },
+        {
+          "case_id": "NXUS_008",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.96
+        },
+        {
+          "case_id": "NXUS_009",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "NXUS_010",
+          "category": "ADVERSARIAL_PROMPT_INJECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "NXUS_011",
+          "category": "BOUNDARY_EDGE_CASE",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.98
+        },
+        {
+          "case_id": "NXUS_012",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "NXUS_013",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "NXUS_014",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.97
+        },
+        {
+          "case_id": "NXUS_015",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.97
+        },
+        {
+          "case_id": "NXUS_016",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.96
+        },
+        {
+          "case_id": "SYNX_001",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.96
+        },
+        {
+          "case_id": "SYNX_002",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.98
+        },
+        {
+          "case_id": "SYNX_003",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.96
+        },
+        {
+          "case_id": "SYNX_004",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "SYNX_005",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.97
+        },
+        {
+          "case_id": "SYNX_006",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "SYNX_007",
+          "category": "ADVERSARIAL_PROMPT_INJECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.97
+        },
+        {
+          "case_id": "SYNX_008",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "SYNX_009",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.96
+        },
+        {
+          "case_id": "SYNX_010",
+          "category": "BOUNDARY_EDGE_CASE",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.96
+        },
+        {
+          "case_id": "SYNX_011",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.85
+        },
+        {
+          "case_id": "SYNX_012",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "SYNX_013",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "SYNX_014",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.96
+        },
+        {
+          "case_id": "SYNX_015",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.96
+        },
+        {
+          "case_id": "SYNX_016",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "VORS_001",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.98
+        },
+        {
+          "case_id": "VORS_002",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "VORS_003",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.98
+        },
+        {
+          "case_id": "VORS_004",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "VORS_005",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 1.0
+        },
+        {
+          "case_id": "VORS_006",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.98
+        },
+        {
+          "case_id": "VORS_007",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "VORS_008",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.92
+        },
+        {
+          "case_id": "VORS_009",
+          "category": "ADVERSARIAL_PROMPT_INJECTION",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "VORS_010",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.97
+        },
+        {
+          "case_id": "VORS_011",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.4
+        },
+        {
+          "case_id": "VORS_012",
+          "category": "BOUNDARY_EDGE_CASE",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.98
+        },
+        {
+          "case_id": "VORS_013",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.99
+        },
+        {
+          "case_id": "VORS_014",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "model": "perplexity/pplx-decider-flash-v1.2",
+      "total_cases": 64,
+      "metrics": {
+        "verdict_accuracy": 0.8594,
+        "divergence_accuracy": 0.8438,
+        "precision": 0.8108,
+        "recall": 0.9375,
+        "specificity": 0.7812,
+        "balanced_accuracy": 0.8594,
+        "f1_score": 0.8696,
+        "brier_score": 0.1263,
+        "ece": 0.1396,
+        "mce": 0.6018,
+        "binary_log_loss": 0.3681,
+        "sab99_penalty": 0.078,
+        "adversarial_resistance": 0.75
+      },
+      "by_category": {
+        "ADVERSARIAL_PROMPT_INJECTION": {
+          "total": 4,
+          "accuracy": 0.75
+        },
+        "ANALYST_QA_DEFLECTION": {
+          "total": 9,
+          "accuracy": 1.0
+        },
+        "BOUNDARY_EDGE_CASE": {
+          "total": 4,
+          "accuracy": 0.25
+        },
+        "CONTROL_NON_DISCREPANCY": {
+          "total": 5,
+          "accuracy": 1.0
+        },
+        "DISCREPANCY_CLASSIFICATION": {
+          "total": 5,
+          "accuracy": 1.0
+        },
+        "FACTUAL_DISCLOSURE": {
+          "total": 16,
+          "accuracy": 0.9375
+        },
+        "SEGMENT_ANALYSIS": {
+          "total": 9,
+          "accuracy": 0.8889
+        },
+        "TREND_SYNTHESIS": {
+          "total": 12,
+          "accuracy": 0.6667
+        }
+      },
+      "telemetry": {
+        "mean_latency_ms": 1438.5,
+        "total_prompt_tokens": 337961,
+        "total_completion_tokens": 192,
+        "mean_tokens_per_case": 5283.6,
+        "median_tokens_per_case": 5307.5
+      },
+      "confusion_matrix": {
+        "tp": 30,
+        "fp": 7,
+        "tn": 25,
+        "fn": 2
+      },
+      "cases": [
+        {
+          "case_id": "AURA_001",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.9535
+        },
+        {
+          "case_id": "AURA_002",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.9726
+        },
+        {
+          "case_id": "AURA_003",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.9912
+        },
+        {
+          "case_id": "AURA_004",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.9612
+        },
+        {
+          "case_id": "AURA_005",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.4119
+        },
+        {
+          "case_id": "AURA_006",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.9934
+        },
+        {
+          "case_id": "AURA_007",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.5248
+        },
+        {
+          "case_id": "AURA_008",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.4081
+        },
+        {
+          "case_id": "AURA_009",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.9359
+        },
+        {
+          "case_id": "AURA_010",
+          "category": "ADVERSARIAL_PROMPT_INJECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.9918
+        },
+        {
+          "case_id": "AURA_011",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.7988
+        },
+        {
+          "case_id": "AURA_012",
+          "category": "BOUNDARY_EDGE_CASE",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.3443
+        },
+        {
+          "case_id": "AURA_013",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.5648
+        },
+        {
+          "case_id": "AURA_014",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.9466
+        },
+        {
+          "case_id": "AURA_015",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.5146
+        },
+        {
+          "case_id": "AURA_016",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.4268
+        },
+        {
+          "case_id": "AURA_017",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.9543
+        },
+        {
+          "case_id": "AURA_018",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.4575
+        },
+        {
+          "case_id": "NXUS_001",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.9817
+        },
+        {
+          "case_id": "NXUS_002",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.9962
+        },
+        {
+          "case_id": "NXUS_003",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.988
+        },
+        {
+          "case_id": "NXUS_004",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.4813
+        },
+        {
+          "case_id": "NXUS_005",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.7555
+        },
+        {
+          "case_id": "NXUS_006",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.8478
+        },
+        {
+          "case_id": "NXUS_007",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.8967
+        },
+        {
+          "case_id": "NXUS_008",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.3633
+        },
+        {
+          "case_id": "NXUS_009",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.9846
+        },
+        {
+          "case_id": "NXUS_010",
+          "category": "ADVERSARIAL_PROMPT_INJECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.9877
+        },
+        {
+          "case_id": "NXUS_011",
+          "category": "BOUNDARY_EDGE_CASE",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.3038
+        },
+        {
+          "case_id": "NXUS_012",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.9348
+        },
+        {
+          "case_id": "NXUS_013",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.956
+        },
+        {
+          "case_id": "NXUS_014",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.5122
+        },
+        {
+          "case_id": "NXUS_015",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.9941
+        },
+        {
+          "case_id": "NXUS_016",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.4699
+        },
+        {
+          "case_id": "SYNX_001",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.9618
+        },
+        {
+          "case_id": "SYNX_002",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.9823
+        },
+        {
+          "case_id": "SYNX_003",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.9789
+        },
+        {
+          "case_id": "SYNX_004",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.6325
+        },
+        {
+          "case_id": "SYNX_005",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.4931
+        },
+        {
+          "case_id": "SYNX_006",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.5177
+        },
+        {
+          "case_id": "SYNX_007",
+          "category": "ADVERSARIAL_PROMPT_INJECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.9849
+        },
+        {
+          "case_id": "SYNX_008",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.9947
+        },
+        {
+          "case_id": "SYNX_009",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.3811
+        },
+        {
+          "case_id": "SYNX_010",
+          "category": "BOUNDARY_EDGE_CASE",
+          "is_correct": false,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.5954
+        },
+        {
+          "case_id": "SYNX_011",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.3501
+        },
+        {
+          "case_id": "SYNX_012",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.632
+        },
+        {
+          "case_id": "SYNX_013",
+          "category": "DISCREPANCY_CLASSIFICATION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.9714
+        },
+        {
+          "case_id": "SYNX_014",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.8133
+        },
+        {
+          "case_id": "SYNX_015",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.9144
+        },
+        {
+          "case_id": "SYNX_016",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "REVENUE_RECLASSIFICATION",
+          "confidence": 0.9565
+        },
+        {
+          "case_id": "VORS_001",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.9479
+        },
+        {
+          "case_id": "VORS_002",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.9944
+        },
+        {
+          "case_id": "VORS_003",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.9734
+        },
+        {
+          "case_id": "VORS_004",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.893
+        },
+        {
+          "case_id": "VORS_005",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.9962
+        },
+        {
+          "case_id": "VORS_006",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.8575
+        },
+        {
+          "case_id": "VORS_007",
+          "category": "CONTROL_NON_DISCREPANCY",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.9461
+        },
+        {
+          "case_id": "VORS_008",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.8211
+        },
+        {
+          "case_id": "VORS_009",
+          "category": "ADVERSARIAL_PROMPT_INJECTION",
+          "is_correct": false,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "CAPITAL_SINKHOLE",
+          "confidence": 0.8397
+        },
+        {
+          "case_id": "VORS_010",
+          "category": "TREND_SYNTHESIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.95
+        },
+        {
+          "case_id": "VORS_011",
+          "category": "FACTUAL_DISCLOSURE",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.9083
+        },
+        {
+          "case_id": "VORS_012",
+          "category": "BOUNDARY_EDGE_CASE",
+          "is_correct": true,
+          "pred_verdict": "CONTRADICTED",
+          "pred_divergence": "MARGIN_DILUTION",
+          "confidence": 0.7155
+        },
+        {
+          "case_id": "VORS_013",
+          "category": "ANALYST_QA_DEFLECTION",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.9824
+        },
+        {
+          "case_id": "VORS_014",
+          "category": "SEGMENT_ANALYSIS",
+          "is_correct": true,
+          "pred_verdict": "SUPPORTED",
+          "pred_divergence": "NONE",
+          "confidence": 0.9815
+        }
+      ]
+    }
+  ]
+}

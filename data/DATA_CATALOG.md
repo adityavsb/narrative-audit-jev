@@ -12,14 +12,14 @@ workflows that compare qualitative disclosure text against structured financial 
 | **Fictional companies** | **4** (AuraCloud, NexusEnterprise, Synthetix, Vortex Analytics) |
 | **Quarters per company** | **8** (2024 Q1 – 2025 Q4) |
 | **Transcript turns** | **3 per company** (12 total): short scripted CEO/CFO/analyst dialogue |
-| **Golden evaluation cases** | **52** labeled claims in `data/golden_ground_truth.json` |
+| **Golden evaluation cases** | **64** labeled claims in `data/golden_ground_truth.json` |
 
 All company names, tickers, speaker names, and financial figures are **original fiction**. They do not
-represent real issuers, real people, or real bank affiliations.
+represent real issuers, real people, or real bank affiliations. Any accidental similarity to a real
+ticker, company, or figure is coincidental; this corpus is not verified against exchange or trademark
+registries and must not be relied on for any real-world decision.
 
-**Ticker Disambiguation Note:**
-The synthetic tickers `AURA` and `SYNX` were chosen arbitrarily. They have no association with
-Aura Biosciences, Inc. (NASDAQ: AURA), Silynxcom Ltd. (NYSE American: SYNX), or the Synthetix (SNX) protocol.
+**Ticker note:** Synthetic tickers `AURA`, `NXUS`, `SYNX`, and `VORS` are benchmark identifiers only; they are not intended to identify real issuers.
 
 Regenerate fixtures locally:
 

@@ -47,17 +47,13 @@ def test_citation_cff_exists_and_has_required_fields():
     assert "Bhadoria" in content and "Aditya" in content
 
 
-def test_ticker_disambiguation_present_in_docs():
+def test_ticker_disclaimer_present_in_docs():
     repo_root = Path(__file__).resolve().parent.parent
     catalog = (repo_root / "data" / "DATA_CATALOG.md").read_text()
     readme = (repo_root / "README.md").read_text()
 
-    # Verify DATA_CATALOG.md disambiguation note
-    assert "Ticker Disambiguation Note" in catalog
-    assert "Aura Biosciences, Inc. (NASDAQ: AURA)" in catalog
-    assert "Silynxcom Ltd. (NYSE American: SYNX)" in catalog
-
-    # Verify README.md disclaimer and citation pointers
+    assert "synthetic benchmark identifiers" in readme.lower() or "not intended to identify real issuers" in readme
+    assert "NXUS" in catalog and "VORS" in catalog
     assert "AURA" in readme and "SYNX" in readme
     assert "REFERENCES.bib" in readme
     assert "CITATION.cff" in readme

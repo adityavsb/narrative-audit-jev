@@ -17,3 +17,8 @@ regexes = [
   '''sk-test-mock-key''',
   '''PASTE_YOUR_OPENROUTER''',
 ]
+
+[[rules]]
+id = "openrouter-api-key"
+description = "OpenRouter API key"
+regex = '''sk-or-v1-[a-zA-Z0-9\-_]{20,}'''

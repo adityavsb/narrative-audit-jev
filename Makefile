@@ -63,7 +63,7 @@ package-openrouter-results:
 	$(VENV)/bin/python scripts/package_openrouter_results.py
 
 secret-scan-history:
-	@command -v gitleaks >/dev/null 2>&1 || { echo "Install gitleaks: https://github.com/gitleaks/gitleaks"; exit 1; }
+	@command -v gitleaks >/dev/null 2>&1 || { echo "Install gitleaks: brew install gitleaks (see CONTRIBUTING.md)"; exit 1; }
 	gitleaks detect --source . --log-opts --all --redact --config .gitleaks.toml --verbose
 
 metrics:

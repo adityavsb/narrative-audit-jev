@@ -58,6 +58,9 @@ credentials.json
 mlruns/
 .mlflow/
 
+# Local OpenRouter checkpoints (raw traces; publish via make package-openrouter-results)
+data/eval_runs/
+
 # Pytest / coverage
 .pytest_cache/
 .coverage
@@ -78,3 +81,6 @@ TODO_*.md
 state.md
 decision log.md
 next steps.md
+
+# Session handoff notes (not shipped)
+docs/OPENROUTER_FRAMEWORK_HANDOFF.md

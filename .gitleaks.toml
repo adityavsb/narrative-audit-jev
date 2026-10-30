@@ -1,0 +1,19 @@
+title = "narrative-audit-jev gitleaks config"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "pytest and docs use obvious fake OpenRouter keys"
+paths = [
+  '''tests/.*''',
+  '''\.env\.example''',
+]
+
+[[allowlists]]
+regexes = [
+  '''sk-or-v1-mockedkey1234567890''',
+  '''sk-or-v1-test''',
+  '''sk-test-mock-key''',
+  '''PASTE_YOUR_OPENROUTER''',
+]

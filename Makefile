@@ -1,4 +1,4 @@
-.PHONY: help install test test-cov lint format clean eval data-check generate-data metrics grep-gate check-model-1 check-models-2-3 eval-openrouter
+.PHONY: help install test test-cov lint format clean eval data-check generate-data metrics grep-gate check-model-1 check-models-2-3 eval-openrouter package-openrouter-results secret-scan-history
 
 PYTHON ?= python3
 VENV ?= .venv
@@ -17,6 +17,8 @@ help:
 	@echo "  make check-model-1     Smoke test Model 1 on 1 case (check-run stage 1)"
 	@echo "  make check-models-2-3  Smoke test Models 2 & 3 on 1 case (check-run stage 2)"
 	@echo "  make eval-openrouter   Full benchmark evaluation across all 3 models + rule engine"
+	@echo "  make package-openrouter-results  Redact local eval_runs into data/results/openrouter/"
+	@echo "  make secret-scan-history  Scan full git history for leaked secrets (requires gitleaks)"
 	@echo "  make clean             Remove temporary files and caches"
 
 generate-data:
@@ -56,6 +58,13 @@ check-models-2-3:
 
 eval-openrouter:
 	$(VENV)/bin/python scripts/run_openrouter_eval.py --stage full
+
+package-openrouter-results:
+	$(VENV)/bin/python scripts/package_openrouter_results.py
+
+secret-scan-history:
+	@command -v gitleaks >/dev/null 2>&1 || { echo "Install gitleaks: https://github.com/gitleaks/gitleaks"; exit 1; }
+	gitleaks detect --source . --log-opts --all --redact --config .gitleaks.toml --verbose
 
 metrics:
 	bash scripts/record_metrics.sh

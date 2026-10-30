@@ -38,7 +38,7 @@ FORBIDDEN_PUBLICATION_TERMS: List[str] = [
 
 SCAN_SUFFIXES = {".py", ".md", ".json", ".toml", ".txt", ".yml", ".yaml"}
 SKIP_DIR_NAMES = {".git", ".venv", "venv", "__pycache__", ".pytest_cache", "htmlcov", "dist", "build", "eval_runs", "tests"}
-SKIP_FILE_NAMES = {".env", ".env.local", ".env.development"}
+SKIP_FILE_NAMES = {".env", ".env.local", ".env.development", ".gitleaks.toml"}
 
 SECRET_PATTERNS: List[re.Pattern[str]] = [
     re.compile(r"sk-or-v1-[a-zA-Z0-9]{16,}"),

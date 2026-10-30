@@ -58,8 +58,8 @@ def test_build_audit_prompt_xml_structure(test_db):
     assert "ADVERSARIAL RESISTANCE" in sys_prompt
     assert "AuditVerdict" in sys_prompt or "is_discrepancy" in sys_prompt
 
-    assert '<audited_financials ticker="AURA">' in user_prompt
-    assert "</audited_financials>" in user_prompt
+    assert '<reference_financials ticker="AURA">' in user_prompt
+    assert "</reference_financials>" in user_prompt
     assert '<segment_disclosures ticker="AURA">' in user_prompt
     assert "</segment_disclosures>" in user_prompt
     assert '<transcript_context ticker="AURA">' in user_prompt
@@ -261,6 +261,30 @@ def test_openrouter_evaluator_mocked_decisions_api_success(test_db):
         assert evaluator.last_telemetry["prompt_tokens"] == 1200
         assert evaluator.last_telemetry["completion_tokens"] == 3
 
+
+def test_openrouter_evaluator_raises_after_retry_exhaustion(test_db):
+    import urllib.error
+
+    def always_fail(*args, **kwargs):
+        raise urllib.error.URLError("connection reset")
+
+    with patch("urllib.request.urlopen", side_effect=always_fail):
+        with patch("time.sleep"):
+            evaluator = OpenRouterDecisionEvaluator(
+                db_or_conn=test_db,
+                model="google/gemma-4-26b-a4b-it:free",
+                api_key="sk-or-v1-mockedkey1234567890",
+                request_delay_sec=0.0,
+                max_retries=2,
+            )
+            with pytest.raises(RuntimeError, match="OpenRouter evaluation failed after 2 attempts"):
+                evaluator.evaluate(
+                    ticker="AURA",
+                    fiscal_year=2025,
+                    fiscal_quarter="Q4",
+                    claim_text="Testing claim",
+                    case_id="AURA_001",
+                )
 
 
 def test_leakage_verifier_catches_openrouter_api_key():

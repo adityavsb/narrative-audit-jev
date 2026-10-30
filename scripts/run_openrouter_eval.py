@@ -7,6 +7,7 @@ import argparse
 from datetime import datetime, timezone
 import json
 from pathlib import Path
+import statistics
 import sys
 import time
 from typing import Any, Dict, List, Optional
@@ -115,9 +116,11 @@ def evaluate_model_on_cases(
     adv_total = 0
     adv_correct = 0
     tp = fp = tn = fn = 0
+    failed_count = 0
 
     by_category: Dict[str, Dict[str, int]] = {}
     latencies: List[float] = []
+    case_token_totals: List[int] = []
     total_prompt_tokens = 0
     total_comp_tokens = 0
     all_case_results: List[Dict[str, Any]] = []
@@ -153,7 +156,21 @@ def evaluate_model_on_cases(
         else:
             print(f"  [EVAL]  {idx:02d}/{len(cases)} {cid:10s} ({ticker} FY{fy} {fq})...", end=" ", flush=True)
             t0 = time.time()
-            verdict = evaluator.evaluate(ticker, fy, fq, claim, cid)
+            try:
+                verdict = evaluator.evaluate(ticker, fy, fq, claim, cid)
+            except RuntimeError as err:
+                lat = (time.time() - t0) * 1000.0
+                failed_count += 1
+                err_name = type(err).__name__
+                print(f"[FAILED] ({lat/1000.0:.1f}s) {err_name}", flush=True)
+                all_case_results.append({
+                    "case_id": cid,
+                    "category": cat,
+                    "status": "FAILED",
+                    "error_type": err_name,
+                })
+                continue
+
             lat = (time.time() - t0) * 1000.0
 
             pred_is_disc = verdict.is_discrepancy
@@ -198,6 +215,7 @@ def evaluate_model_on_cases(
         latencies.append(lat)
         total_prompt_tokens += in_tok
         total_comp_tokens += out_tok
+        case_token_totals.append(int(in_tok) + int(out_tok))
 
         if v_match:
             verdict_correct += 1
@@ -232,23 +250,41 @@ def evaluate_model_on_cases(
         all_case_results.append({
             "case_id": cid,
             "category": cat,
+            "status": "SUCCEEDED",
             "is_correct": is_pass,
             "pred_verdict": pred_verdict,
             "pred_divergence": pred_div,
             "confidence": round(conf, 4),
         })
 
-    total_n = len(cases)
-    precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
-    recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
-    specificity = tn / (tn + fp) if (tn + fp) > 0 else 0.0
-    balanced_acc = (recall + specificity) / 2.0
-    f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
-
-    return {
-        "model": model_name,
-        "total_cases": total_n,
-        "metrics": {
+    attempted = len(cases)
+    succeeded = attempted - failed_count
+    if succeeded == 0:
+        total_n = 0
+        precision = recall = specificity = balanced_acc = f1 = 0.0
+        metrics_block = {
+            "verdict_accuracy": 0.0,
+            "divergence_accuracy": 0.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "specificity": 0.0,
+            "balanced_accuracy": 0.0,
+            "f1_score": 0.0,
+            "brier_score": 0.0,
+            "ece": 0.0,
+            "mce": 0.0,
+            "binary_log_loss": 0.0,
+            "sab99_penalty": 0.0,
+            "adversarial_resistance": 0.0,
+        }
+    else:
+        total_n = succeeded
+        precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
+        recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
+        specificity = tn / (tn + fp) if (tn + fp) > 0 else 0.0
+        balanced_acc = (recall + specificity) / 2.0
+        f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
+        metrics_block = {
             "verdict_accuracy": round(verdict_correct / total_n, 4),
             "divergence_accuracy": round(divergence_correct / total_n, 4),
             "precision": round(precision, 4),
@@ -262,7 +298,15 @@ def evaluate_model_on_cases(
             "binary_log_loss": round(binary_log_loss(y_true, y_prob), 4),
             "sab99_penalty": round(materiality_weighted_loss(y_true, y_pred, materialities), 4),
             "adversarial_resistance": round((adv_correct / adv_total) if adv_total > 0 else 1.0, 4),
-        },
+        }
+
+    return {
+        "model": model_name,
+        "attempted": attempted,
+        "succeeded": succeeded,
+        "failed": failed_count,
+        "total_cases": total_n,
+        "metrics": metrics_block,
         "by_category": {
             c: {"total": d["total"], "accuracy": round(d["correct"] / d["total"], 4)}
             for c, d in sorted(by_category.items())
@@ -271,6 +315,12 @@ def evaluate_model_on_cases(
             "mean_latency_ms": round(sum(latencies) / len(latencies), 1) if latencies else 0.0,
             "total_prompt_tokens": total_prompt_tokens,
             "total_completion_tokens": total_comp_tokens,
+            "mean_tokens_per_case": round(statistics.mean(case_token_totals), 1)
+            if case_token_totals
+            else 0.0,
+            "median_tokens_per_case": round(statistics.median(case_token_totals), 1)
+            if case_token_totals
+            else 0.0,
         },
         "confusion_matrix": {"tp": tp, "fp": fp, "tn": tn, "fn": fn},
         "cases": all_case_results,
@@ -318,6 +368,11 @@ def main() -> int:
     parser.add_argument("--model3", type=str, default=None, help="Model 3 ID (overrides OPENROUTER_MODEL_3)")
     parser.add_argument("--delay", type=float, default=None, help="Delay between requests in seconds")
     parser.add_argument("--verbose", action="store_true", help="Print per-case logs")
+    parser.add_argument(
+        "--allow-partial",
+        action="store_true",
+        help="Exit 0 when some cases fail (full stage); metrics exclude failed cases",
+    )
     args = parser.parse_args()
 
     env_cfg = load_openrouter_env()
@@ -358,7 +413,11 @@ def main() -> int:
 
     if args.stage == "check-one":
         evaluator = OpenRouterDecisionEvaluator(db, model=m1, api_key=api_key, request_delay_sec=delay)
-        run_single_case_smoke_test(evaluator, check_case)
+        try:
+            run_single_case_smoke_test(evaluator, check_case)
+        except RuntimeError as err:
+            print(f"\n[!] Stage 1 failed: {type(err).__name__}: {err}")
+            return 1
         print("\n[✓] Stage 1 (Check-Run Model 1) completed successfully!")
         print("    Next step: Run 'make check-models-2-3' to check the remaining 2 models.")
         return 0
@@ -366,7 +425,11 @@ def main() -> int:
     elif args.stage == "check-remaining":
         for mid in [m2, m3]:
             evaluator = OpenRouterDecisionEvaluator(db, model=mid, api_key=api_key, request_delay_sec=delay)
-            run_single_case_smoke_test(evaluator, check_case)
+            try:
+                run_single_case_smoke_test(evaluator, check_case)
+            except RuntimeError as err:
+                print(f"\n[!] Check-run failed for {mid}: {type(err).__name__}: {err}")
+                return 1
         print("\n[✓] Stage 2 (Check-Run Models 2 & 3) completed successfully!")
         print("    All 3 models are verified. Next step: Run 'make eval-openrouter' for the full 64-case sweep.")
         return 0
@@ -384,6 +447,7 @@ def main() -> int:
         )
 
         all_results = [local_results]
+        total_failures = local_results.get("failed", 0)
 
         # 2. Evaluate the 3 OpenRouter Models
         models_to_run = [m1, m2, m3]
@@ -398,8 +462,16 @@ def main() -> int:
                 verbose=args.verbose,
             )
             all_results.append(m_res)
+            total_failures += m_res.get("failed", 0)
 
         print_comparison_table(all_results)
+        print(
+            f"\n[*] Run totals: attempted={len(cases) * len(all_results)} cases across models, "
+            f"failed={total_failures}"
+        )
+        if total_failures > 0 and not args.allow_partial:
+            print("[!] One or more cases failed. Re-run with --allow-partial to save partial output.")
+            return 1
 
         summary_file = checkpoint_dir / "openrouter_comparison_summary.json"
         with open(summary_file, "w") as f:
@@ -422,8 +494,8 @@ def main() -> int:
             f"",
             f"## 1. Comparative Leaderboard",
             f"",
-            f"| Model | Verdict Accuracy | Category Accuracy | Brier Score | ECE | Log Loss | Q&A Deflections | Footnote Reclasses | Mean Latency |",
-            f"|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|",
+            f"| Model | Verdict Accuracy | Category Accuracy | Brier Score | ECE | Log Loss | Q&A Deflections | Footnote Reclasses | Mean Latency | Avg Tokens / Case | Median Tokens / Case |",
+            f"|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|",
         ]
         for r in all_results:
             m = r["metrics"]
@@ -431,8 +503,10 @@ def main() -> int:
             cats = r["by_category"]
             qa_acc = cats.get("ANALYST_QA_DEFLECTION", {}).get("accuracy", 0.0) * 100
             seg_acc = cats.get("SEGMENT_ANALYSIS", {}).get("accuracy", 0.0) * 100
+            avg_tok = t.get("mean_tokens_per_case", 0.0)
+            med_tok = t.get("median_tokens_per_case", 0.0)
             md_lines.append(
-                f"| **{r['model']}** | {m['verdict_accuracy']*100:.2f}% | {m['divergence_accuracy']*100:.2f}% | {m['brier_score']:.4f} | {m['ece']:.4f} | {m['binary_log_loss']:.4f} | {qa_acc:.1f}% | {seg_acc:.1f}% | {t['mean_latency_ms']:.0f} ms |"
+                f"| **{r['model']}** | {m['verdict_accuracy']*100:.2f}% | {m['divergence_accuracy']*100:.2f}% | {m['brier_score']:.4f} | {m['ece']:.4f} | {m['binary_log_loss']:.4f} | {qa_acc:.1f}% | {seg_acc:.1f}% | {t['mean_latency_ms']:.0f} ms | {avg_tok:.0f} | {med_tok:.0f} |"
             )
 
         md_lines.extend([
